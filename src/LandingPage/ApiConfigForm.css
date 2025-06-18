@@ -1,0 +1,179 @@
+/* ApiConfigForm.css - Styles for the decoupled form component */
+
+.api-config-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.api-config-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+  border: 1px solid #f0f0f0;
+}
+
+.api-config-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.api-config-form {
+  padding: 24px;
+}
+
+/* Form field styling */
+.api-config-form .ant-form-item-label > label {
+  font-weight: 500;
+  color: #262626;
+  font-size: 14px;
+}
+
+.api-config-form .ant-form-item {
+  margin-bottom: 20px;
+}
+
+/* Disabled input styling */
+.disabled-input {
+  background-color: #f5f5f5 !important;
+  color: #8c8c8c;
+  cursor: not-allowed;
+}
+
+/* API key input styling */
+.api-key-input {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  letter-spacing: 1px;
+}
+
+.api-key-input:focus {
+  border-color: #40a9ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* App description textarea */
+.app-description-textarea {
+  resize: none;
+  border-radius: 6px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.app-description-textarea:focus {
+  border-color: #40a9ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Submit button area */
+.submit-form-item {
+  margin-top: 32px;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.submit-button {
+  background: #52c41a;
+  border-color: #52c41a;
+  border-radius: 6px;
+  font-weight: 500;
+  height: 40px;
+  padding: 0 24px;
+  transition: all 0.3s ease;
+}
+
+.submit-button:hover {
+  background: #73d13d;
+  border-color: #73d13d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.submit-button:focus {
+  box-shadow: 0 0 0 2px rgba(82, 196, 26, 0.2);
+}
+
+/* Keyboard shortcut hint */
+.keyboard-hint {
+  color: #8c8c8c;
+  font-size: 13px;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  background: #f5f5f5;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e8e8e8;
+}
+
+/* Footer styling */
+.form-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding: 16px;
+}
+
+.footer-link {
+  color: #1890ff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #40a9ff;
+  text-decoration: underline;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .api-config-form-container {
+    padding: 0 12px;
+  }
+  
+  .api-config-form {
+    padding: 16px;
+  }
+  
+  .submit-form-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .submit-button {
+    width: 100%;
+  }
+}
+
+/* Form validation styling */
+.api-config-form .ant-form-item-has-error .ant-input,
+.api-config-form .ant-form-item-has-error .ant-input-affix-wrapper {
+  border-color: #ff4d4f;
+}
+
+.api-config-form .ant-form-item-has-error .ant-form-item-explain-error {
+  color: #ff4d4f;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* Tooltip styling */
+.api-config-form .ant-tooltip-inner {
+  background: #363636;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Loading state */
+.submit-button.ant-btn-loading {
+  background: #d9d9d9;
+  border-color: #d9d9d9;
+  cursor: not-allowed;
+}
+
+.submit-button.ant-btn-loading:hover {
+  transform: none;
+  box-shadow: none;
+} 

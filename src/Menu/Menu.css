@@ -1,0 +1,41 @@
+/* Menu.css */
+
+.ant-layout-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.ant-form-item-label > label {
+  font-weight: 500;
+}
+
+.ant-btn-primary {
+  transition: all 0.3s ease;
+}
+
+.ant-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
+}
+
+.ant-card {
+  transition: box-shadow 0.3s ease;
+}
+
+.ant-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Fixed sidebar content margin */
+.main-content-with-sidebar {
+  margin-left: 200px;
+  transition: margin-left 0.2s;
+}
+
+/* Responsive adjustment for collapsed sidebar */
+@media (max-width: 1000px) {
+  .main-content-with-sidebar {
+    margin-left: 80px;
+  }
+} 
