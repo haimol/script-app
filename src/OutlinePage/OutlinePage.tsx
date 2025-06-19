@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Alert, Button, Spin, message } from "antd";
+import { Alert, Button, Spin, Skeleton, message } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
 import OpenAI from "openai";
 import { 
@@ -183,82 +183,95 @@ const prompt = `${formData.appDescription}`;
         }
       />
       
-      <Spin spinning={isGenerating} tip="Generating AI outline...">
-        <div style={{ minHeight: '500px' }}>
-          {outlineText.length > 0 ? (
-            <MDXEditor
-              key="mdx-editor-stable"
-              markdown={outlineText}
-              onChange={(value: string) => setOutlineText(value)}
-              readOnly={isGenerating}
-              suppressHtmlProcessing={true}
-              plugins={[
-                headingsPlugin(),
-                listsPlugin(),
-                quotePlugin(),
-                thematicBreakPlugin(),
-                markdownShortcutPlugin(),
-                linkPlugin(),
-                tablePlugin(),
-                codeBlockPlugin({
-                  defaultCodeBlockLanguage: ''
-                }),
-                codeMirrorPlugin({
-                  codeBlockLanguages: {
-                    js: 'JavaScript',
-                    ts: 'TypeScript',
-                    jsx: 'JavaScript (React)',
-                    tsx: 'TypeScript (React)',
-                    html: 'HTML',
-                    css: 'CSS',
-                    json: 'JSON',
-                    markdown: 'Markdown',
-                    bash: 'Bash',
-                    python: 'Python',
-                    '': 'Plain Text'
-                  }
-                }),
-                diffSourcePlugin({
-                  viewMode: 'rich-text',
-                  diffMarkdown: ''
-                }),
-                toolbarPlugin({
-                  toolbarContents: () => (
-                    <>
-                      <UndoRedo />
-                      <Separator />
-                      <BoldItalicUnderlineToggles />
-                      <CodeToggle />
-                      <Separator />
-                      <BlockTypeSelect />
-                      <Separator />
-                      <ListsToggle />
-                      <Separator />
-                      <CreateLink />
-                      <InsertTable />
-                      <Separator />
-                      <InsertCodeBlock />
-                      <InsertThematicBreak />
-                    </>
-                  )
-                })
-              ]}
-            />
-          ) : (
-            <div style={{ 
-              border: '1px dashed #ccc', 
-              padding: 20, 
-              textAlign: 'center', 
-              color: '#666',
-              borderRadius: 4
-            }}>
-              No content to display
-            </div>
-          )}
-          
-
-        </div>
-      </Spin>
+      <div style={{ minHeight: '500px' }}>
+        {isGenerating ? (
+          <div style={{ padding: 16, border: '1px solid #d9d9d9', borderRadius: 6 }}>
+            {/* Simulate script outline structure with skeleton */}
+            <Skeleton.Input active size="large" style={{ width: '60%', marginBottom: 24 }} />
+            <Skeleton active paragraph={{ rows: 2 }} />
+            
+            <Skeleton.Input active size="default" style={{ width: '40%', marginTop: 16, marginBottom: 12 }} />
+            <Skeleton active paragraph={{ rows: 3 }} />
+            
+            <Skeleton.Input active size="default" style={{ width: '50%', marginTop: 16, marginBottom: 12 }} />
+            <Skeleton active paragraph={{ rows: 4 }} />
+            
+            <Skeleton.Input active size="default" style={{ width: '45%', marginTop: 16, marginBottom: 12 }} />
+            <Skeleton active paragraph={{ rows: 2 }} />
+            
+            <Skeleton.Input active size="default" style={{ width: '55%', marginTop: 16, marginBottom: 12 }} />
+            <Skeleton active paragraph={{ rows: 3 }} />
+          </div>
+        ) : outlineText.length > 0 ? (
+          <MDXEditor
+            key="mdx-editor-stable"
+            markdown={outlineText}
+            onChange={(value: string) => setOutlineText(value)}
+            suppressHtmlProcessing={true}
+            plugins={[
+              headingsPlugin(),
+              listsPlugin(),
+              quotePlugin(),
+              thematicBreakPlugin(),
+              markdownShortcutPlugin(),
+              linkPlugin(),
+              tablePlugin(),
+              codeBlockPlugin({
+                defaultCodeBlockLanguage: ''
+              }),
+              codeMirrorPlugin({
+                codeBlockLanguages: {
+                  js: 'JavaScript',
+                  ts: 'TypeScript',
+                  jsx: 'JavaScript (React)',
+                  tsx: 'TypeScript (React)',
+                  html: 'HTML',
+                  css: 'CSS',
+                  json: 'JSON',
+                  markdown: 'Markdown',
+                  bash: 'Bash',
+                  python: 'Python',
+                  '': 'Plain Text'
+                }
+              }),
+              diffSourcePlugin({
+                viewMode: 'rich-text',
+                diffMarkdown: ''
+              }),
+              toolbarPlugin({
+                toolbarContents: () => (
+                  <>
+                    <UndoRedo />
+                    <Separator />
+                    <BoldItalicUnderlineToggles />
+                    <CodeToggle />
+                    <Separator />
+                    <BlockTypeSelect />
+                    <Separator />
+                    <ListsToggle />
+                    <Separator />
+                    <CreateLink />
+                    <InsertTable />
+                    <Separator />
+                    <InsertCodeBlock />
+                    <InsertThematicBreak />
+                  </>
+                )
+              })
+            ]}
+          />
+        ) : (
+          <div style={{ 
+            border: '1px dashed #ccc', 
+            padding: 20, 
+            textAlign: 'center', 
+            color: '#666',
+            borderRadius: 4
+          }}>
+            No content to display
+          </div>
+        )}
+      </div>
       
                 {/* Additional controls */}
       <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
