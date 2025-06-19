@@ -78,8 +78,9 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             form.scrollToField(errorInfo.errorFields[0].name);
           }}
           initialValues={{
-            aiProvider: "openai",
-            appDescription: "write me an app displays Hello World in modern design",
+            aiProvider: "deepseek",
+            apiKey: "sk-08fc30a4bed1498f94c48b34635347e6",
+            appDescription: "Hello",
             ...initialValues // Merge with any provided initial values
           }}
           className="api-config-form"
@@ -96,8 +97,8 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             tooltip="Choose which AI service to use for generating your script"
           >
             <Radio.Group buttonStyle="solid" size="large">
-              <Radio.Button value="openai">OpenAI</Radio.Button>
               <Radio.Button value="deepseek">DeepSeek</Radio.Button>
+              <Radio.Button value="openai">OpenAI</Radio.Button>
             </Radio.Group>
           </Form.Item>
 
@@ -106,15 +107,14 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             label="API key:" 
             name="apiKey"
             rules={[
-              { required: false, message: 'API key is required!' }, // Made optional for testing
-              { min: 3, message: 'API key seems too short!' } // Reduced minimum length for testing
+              { required: true, message: 'API key is required!' }
             ]}
-            tooltip="Your OpenAI API key (optional for testing)"
+            tooltip="Your API key for the selected AI provider"
             validateStatus=""
             help="" // This will show validation errors more clearly
           >
             <Input.Password 
-              placeholder="Enter your API key (optional for testing)"
+              placeholder="Enter your API key"
               className="api-key-input"
             />
           </Form.Item>
@@ -126,8 +126,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             label="App Description:" 
             name="appDescription"
             rules={[
-              { required: true, message: 'App description is required!' },
-              { min: 10, message: 'Please provide a more detailed description!' }
+              { required: true, message: 'App description is required!' }
             ]}
             tooltip="Describe what kind of app you want to create"
           >

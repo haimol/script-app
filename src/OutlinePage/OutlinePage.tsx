@@ -2,8 +2,32 @@ import React, { useState, useEffect } from "react";
 import { Alert, Button, Spin, message } from "antd";
 import { useLocation, Navigate } from "react-router-dom";
 import OpenAI from "openai";
-import MDEditor from '@uiw/react-md-editor';
-import '@uiw/react-md-editor/markdown-editor.css';
+import { 
+  MDXEditor, 
+  headingsPlugin, 
+  listsPlugin, 
+  quotePlugin, 
+  thematicBreakPlugin,
+  markdownShortcutPlugin,
+  linkPlugin,
+  linkDialogPlugin,
+  tablePlugin,
+  codeBlockPlugin,
+  codeMirrorPlugin,
+  toolbarPlugin,
+  UndoRedo,
+  BoldItalicUnderlineToggles,
+  BlockTypeSelect,
+  CreateLink,
+  InsertTable,
+  ListsToggle,
+  Separator,
+  diffSourcePlugin,
+  InsertThematicBreak,
+  CodeToggle,
+  InsertCodeBlock
+} from '@mdxeditor/editor';
+import '@mdxeditor/editor/style.css';
 
 // Interface for the form data structure
 interface FormData {
@@ -19,10 +43,22 @@ const OutlinePage: React.FC = () => {
   const [outlineText, setOutlineText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // OpenAI API calling function
-  const callOpenAI = async (prompt: string, apiKey: string): Promise<string> => {
+  // Unified AI API calling function
+  const callAI = async (prompt: string, apiKey: string, provider: 'openai' | 'deepseek'): Promise<string> => {
     try {
+      // Configure API settings based on provider
+      const apiConfig = provider === 'openai' 
+        ? {
+            baseURL: undefined, // Use default OpenAI URL
+            model: "gpt-4o"
+          }
+        : {
+            baseURL: 'https://api.deepseek.com',
+            model: "deepseek-chat"
+          };
+
       const openai = new OpenAI({
+        baseURL: apiConfig.baseURL,
         apiKey: apiKey,
         dangerouslyAllowBrowser: true // Note: In production, API calls should be made from backend
       });
@@ -32,48 +68,29 @@ const OutlinePage: React.FC = () => {
           { role: "system", content: "You are a professional script writer and creative assistant." },
           { role: "user", content: prompt }
         ],
-        model: "gpt-4o", // or "gpt-3.5-turbo" for faster/cheaper
+        model: apiConfig.model,
         max_tokens: 2000,
         temperature: 0.7,
       });
 
       return completion.choices[0].message.content || "No response generated.";
     } catch (error) {
-      console.error('OpenAI API Error:', error);
-      throw new Error(`OpenAI API Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  };
-
-  // DeepSeek API calling function
-  const callDeepSeek = async (prompt: string, apiKey: string): Promise<string> => {
-    try {
-      const openai = new OpenAI({
-        baseURL: 'https://api.deepseek.com',
-        apiKey: apiKey,
-        dangerouslyAllowBrowser: true // Note: In production, API calls should be made from backend
-      });
-
-      const completion = await openai.chat.completions.create({
-        messages: [
-          { role: "system", content: "You are a professional script writer and creative assistant." },
-          { role: "user", content: prompt }
-        ],
-        model: "deepseek-chat",
-        max_tokens: 2000,
-        temperature: 0.7,
-      });
-
-      return completion.choices[0].message.content || "No response generated.";
-    } catch (error) {
-      console.error('DeepSeek API Error:', error);
-      throw new Error(`DeepSeek API Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API Error:`, error);
+      throw new Error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   };
 
   // Main function to generate outline using AI
   const generateAIOutline = async () => {
-    if (!formData || !formData.apiKey) {
+    if (!formData) {
+      message.error('Form data is missing');
+      return;
+    }
+
+    // Require API key for AI generation
+    if (!formData.apiKey) {
       message.error('API key is required to generate AI outline');
+      setIsGenerating(false);
       return;
     }
 
@@ -81,31 +98,25 @@ const OutlinePage: React.FC = () => {
 
     try {
       // Create prompt based on user's description
-      const prompt = `Create a detailed script outline for the following project:
+//       const prompt = `Create a detailed script outline for the following project:
 
-Description: ${formData.appDescription}
+// Description: ${formData.appDescription}
 
-Please provide a comprehensive script outline with the following structure:
-1. Title and logline
-2. Character descriptions
-3. Scene-by-scene breakdown
-4. Key dialogue points
-5. Visual elements and staging notes
+// Please provide a comprehensive script outline with the following structure:
+// 1. Title and logline
+// 2. Character descriptions
+// 3. Scene-by-scene breakdown
+// 4. Key dialogue points
+// 5. Visual elements and staging notes
 
-Make it professional and ready for production use.`;
+// Make it professional and ready for production use.`;
 
-      let aiResponse: string;
+//for testing
+const prompt = `${formData.appDescription}`;
 
-      // Call appropriate AI service based on user selection
-      if (formData.aiProvider === 'openai') {
-        console.log('🤖 Calling OpenAI API...');
-        aiResponse = await callOpenAI(prompt, formData.apiKey);
-      } else if (formData.aiProvider === 'deepseek') {
-        console.log('🤖 Calling DeepSeek API...');
-        aiResponse = await callDeepSeek(prompt, formData.apiKey);
-      } else {
-        throw new Error('Invalid AI provider selected');
-      }
+      // Call AI service with the selected provider
+      console.log(`🤖 Calling ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} API...`);
+      const aiResponse = await callAI(prompt, formData.apiKey, formData.aiProvider);
 
       // Set the AI-generated content
       setOutlineText(aiResponse);
@@ -142,15 +153,6 @@ Make it professional and ready for production use.`;
             </Button>
           }
         />
-                 <div style={{ marginTop: 16 }}>
-           <MDEditor
-             value={outlineText}
-             onChange={(val) => setOutlineText(val || '')}
-             preview="edit"
-             hideToolbar={false}
-             data-color-mode="light"
-           />
-         </div>
       </div>
     );
   }
@@ -183,19 +185,83 @@ Make it professional and ready for production use.`;
       
       <Spin spinning={isGenerating} tip="Generating AI outline...">
         <div style={{ minHeight: '500px' }}>
-          <MDEditor
-            value={outlineText}
-            onChange={(val) => setOutlineText(val || '')}
-            preview="live"
-            hideToolbar={isGenerating}
-            data-color-mode="light"
-            height={500}
-          />
+          {outlineText.length > 0 ? (
+            <MDXEditor
+              key="mdx-editor-stable"
+              markdown={outlineText}
+              onChange={(value: string) => setOutlineText(value)}
+              readOnly={isGenerating}
+              suppressHtmlProcessing={true}
+              plugins={[
+                headingsPlugin(),
+                listsPlugin(),
+                quotePlugin(),
+                thematicBreakPlugin(),
+                markdownShortcutPlugin(),
+                linkPlugin(),
+                tablePlugin(),
+                codeBlockPlugin({
+                  defaultCodeBlockLanguage: ''
+                }),
+                codeMirrorPlugin({
+                  codeBlockLanguages: {
+                    js: 'JavaScript',
+                    ts: 'TypeScript',
+                    jsx: 'JavaScript (React)',
+                    tsx: 'TypeScript (React)',
+                    html: 'HTML',
+                    css: 'CSS',
+                    json: 'JSON',
+                    markdown: 'Markdown',
+                    bash: 'Bash',
+                    python: 'Python',
+                    '': 'Plain Text'
+                  }
+                }),
+                diffSourcePlugin({
+                  viewMode: 'rich-text',
+                  diffMarkdown: ''
+                }),
+                toolbarPlugin({
+                  toolbarContents: () => (
+                    <>
+                      <UndoRedo />
+                      <Separator />
+                      <BoldItalicUnderlineToggles />
+                      <CodeToggle />
+                      <Separator />
+                      <BlockTypeSelect />
+                      <Separator />
+                      <ListsToggle />
+                      <Separator />
+                      <CreateLink />
+                      <InsertTable />
+                      <Separator />
+                      <InsertCodeBlock />
+                      <InsertThematicBreak />
+                    </>
+                  )
+                })
+              ]}
+            />
+          ) : (
+            <div style={{ 
+              border: '1px dashed #ccc', 
+              padding: 20, 
+              textAlign: 'center', 
+              color: '#666',
+              borderRadius: 4
+            }}>
+              No content to display
+            </div>
+          )}
+          
+
         </div>
       </Spin>
       
-      {/* Additional controls */}
-      <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+                {/* Additional controls */}
+      <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <Button 
           onClick={generateAIOutline}
           loading={isGenerating}
@@ -210,15 +276,19 @@ Make it professional and ready for production use.`;
         >
           Clear
         </Button>
+        <Button 
+          onClick={() => {
+            navigator.clipboard.writeText(outlineText);
+            message.success('Content copied to clipboard!');
+          }}
+          disabled={!outlineText}
+          type="default"
+        >
+          Copy Content
+        </Button>
       </div>
       
-      {/* Debug info - Remove in production */}
-      <details style={{ marginTop: 16, fontSize: 12, color: '#666' }}>
-        <summary>Form Data (Debug Info)</summary>
-        <pre style={{ background: '#f5f5f5', padding: 8, borderRadius: 4, marginTop: 8 }}>
-          {JSON.stringify(formData, null, 2)}
-        </pre>
-      </details>
+
     </div>
   );
 };
