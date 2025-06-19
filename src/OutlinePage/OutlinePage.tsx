@@ -185,7 +185,8 @@ USER'S NEW REQUEST: "${userMessage}"
 IMPORTANT: You MUST respond with ONLY valid JSON in this exact format (no extra text, no markdown formatting):
 
 {
-  "chatReply": "Your conversational response to the user",
+  "chatReply": "Your conversational response to the user, if user looks like he wants to make a change to the outline even though the
+  user did not explict mentioned the outline, you should ask the user to double confirm",
   "outlineUpdate": "The complete updated outline text in markdown format, or null if no changes needed",
   "updateReason": "Brief explanation of what was changed or why no changes were made"
 }
@@ -467,7 +468,7 @@ Rules:
               minHeight: 0
             }}>
               {/* Outline Editor */}
-              <div style={{ flex: 1, padding: 16, overflow: 'hidden' }}>
+              <div style={{ flex: 1, padding: 16, overflow: 'auto' }}>
                 {outlineText.length > 0 ? (
                   <MDXEditor
                     ref={editorRef}
@@ -508,8 +509,8 @@ Rules:
                       toolbarPlugin({
                         toolbarContents: () => (
                           <>
-                            <UndoRedo />
-                            <Separator />
+                            {/* <UndoRedo /> */}
+                            {/* <Separator /> */}
                             <BoldItalicUnderlineToggles />
                             <CodeToggle />
                             <Separator />
