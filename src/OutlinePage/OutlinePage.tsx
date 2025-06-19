@@ -186,7 +186,7 @@ IMPORTANT: You MUST respond with ONLY valid JSON in this exact format (no extra 
 
 {
   "chatReply": "Your conversational response to the user, if user looks like he wants to make a change to the outline even though the
-  user did not explict mentioned the outline, you should ask the user to double confirm",
+  user did not explict mentioned the outline, you should always update the outline",
   "outlineUpdate": "The complete updated outline text in markdown format, or null if no changes needed",
   "updateReason": "Brief explanation of what was changed or why no changes were made"
 }
