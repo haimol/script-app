@@ -317,29 +317,59 @@ Rules:
   }
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ 
+      height: '100vh', 
+      display: 'flex', 
+      flexDirection: 'column',
+      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+    }}>
       {/* Header Alert */}
-      <div style={{ padding: '16px 24px', flexShrink: 0 }}>
+      <div style={{ 
+        padding: '20px 32px', 
+        flexShrink: 0,
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+      }}>
         <Alert
-          message={isGenerating ? "Generating AI Outline..." : initialGenerationComplete ? "AI Outline Ready!" : "Preparing..."}
+          message={isGenerating ? "🤖 Generating AI Outline..." : initialGenerationComplete ? "✨ AI Outline Ready!" : "⚡ Preparing..."}
           description={
             isGenerating 
-              ? `Using ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} to generate your script outline...`
+              ? `Using ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI to craft your script outline...`
               : initialGenerationComplete
-                ? `Generated using ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} • Chat to refine your outline`
-                : "Setting up your workspace..."
+                ? `Generated with ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI • Start chatting to refine your outline`
+                : "Setting up your creative workspace..."
           }
           type={isGenerating ? "info" : initialGenerationComplete ? "success" : "info"}
           showIcon
+          style={{
+            borderRadius: '12px',
+            border: 'none',
+            background: isGenerating 
+              ? 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)'
+              : initialGenerationComplete 
+                ? 'linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%)'
+                : 'linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%)',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+          }}
           action={
             initialGenerationComplete && !isGenerating && (
               <Button 
                 size="small" 
-                type="default" 
+                type="primary"
                 onClick={generateAIOutline}
                 disabled={!formData.apiKey}
+                style={{
+                  borderRadius: '8px',
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  border: 'none',
+                  boxShadow: '0 2px 6px rgba(102, 126, 234, 0.3)',
+                  fontWeight: 500
+                }}
               >
-                Regenerate
+                🔄 Regenerate
               </Button>
             )
           }
@@ -347,23 +377,34 @@ Rules:
       </div>
 
       {/* Main Content Area */}
-      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        minHeight: 0,
+        gap: '1px',
+        background: 'rgba(0, 0, 0, 0.06)'
+      }}>
         {!initialGenerationComplete ? (
           // Initial loading state - show layout preview
           <>
             {/* Left Panel - Chat Preview (Disabled) */}
             <div style={{ 
               width: '40%', 
-              borderRight: '1px solid #e8e8e8',
               display: 'flex',
               flexDirection: 'column',
               minHeight: 0,
-              background: '#fafafa'
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '16px 0 0 16px',
+              margin: '16px 0 16px 16px',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
             }}>
               <div style={{ 
-                padding: '16px 20px', 
-                borderBottom: '1px solid #e8e8e8',
-                background: 'white'
+                padding: '24px 28px', 
+                borderBottom: '1px solid rgba(0, 0, 0, 0.06)',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                borderRadius: '16px 0 0 0',
+                color: 'white'
               }}>
                 <Skeleton.Input active size="default" style={{ width: '70%', marginBottom: 8 }} />
                 <Skeleton.Input active size="small" style={{ width: '90%' }} />
@@ -371,23 +412,39 @@ Rules:
               
               <div style={{ 
                 flex: 1, 
-                padding: '16px', 
+                padding: '32px', 
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <div style={{ textAlign: 'center', color: '#ccc' }}>
-                  <div style={{ fontSize: 48, marginBottom: 16 }}>💬</div>
-                  <div style={{ fontSize: 14 }}>Chat will be available<br />after outline generation</div>
+                <div style={{ textAlign: 'center', color: '#9ca3af' }}>
+                  <div style={{ 
+                    fontSize: 64, 
+                    marginBottom: 20,
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}>💬</div>
+                  <div style={{ 
+                    fontSize: 16, 
+                    fontWeight: 500,
+                    color: '#6b7280',
+                    lineHeight: 1.6
+                  }}>
+                    Interactive Chat<br />
+                    <span style={{ fontSize: 14, color: '#9ca3af' }}>Available after outline generation</span>
+                  </div>
                 </div>
               </div>
               
               <div style={{ 
-                padding: '16px 20px', 
-                background: 'white',
-                borderTop: '1px solid #e8e8e8'
+                padding: '20px 28px', 
+                background: 'rgba(248, 250, 252, 0.8)',
+                borderRadius: '0 0 0 16px',
+                borderTop: '1px solid rgba(0, 0, 0, 0.06)'
               }}>
-                                 <Skeleton.Input active style={{ width: '100%' }} />
+                <Skeleton.Input active style={{ width: '100%', borderRadius: '12px' }} />
               </div>
             </div>
 
@@ -396,46 +453,64 @@ Rules:
               flex: 1, 
               display: 'flex', 
               flexDirection: 'column',
-              minHeight: 0
+              minHeight: 0,
+              maxHeight: '100%',
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '0 16px 16px 0',
+              margin: '16px 16px 16px 0',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+              overflow: 'hidden'
             }}>
-              <div style={{ flex: 1, padding: 16 }}>
+              <div style={{ 
+                flex: 1, 
+                padding: 24, 
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column'
+              }}>
                 <div style={{ 
-                  border: '1px solid #d9d9d9', 
-                  borderRadius: 6, 
-                  padding: 16,
-                  height: '100%',
-                  overflow: 'auto'
+                  border: '2px dashed #e5e7eb', 
+                  borderRadius: 16, 
+                  padding: 24,
+                  flex: 1,
+                  overflow: 'auto',
+                  background: 'linear-gradient(135deg, #fafbfc 0%, #f8fafc 100%)',
+                  maxHeight: '100%'
                 }}>
                   {/* Simulate script outline structure with skeleton */}
-                  <Skeleton.Input active size="large" style={{ width: '60%', marginBottom: 24 }} />
-                  <Skeleton active paragraph={{ rows: 2 }} />
-                  
-                  <Skeleton.Input active size="default" style={{ width: '40%', marginTop: 16, marginBottom: 12 }} />
-                  <Skeleton active paragraph={{ rows: 3 }} />
-                  
-                  <Skeleton.Input active size="default" style={{ width: '50%', marginTop: 16, marginBottom: 12 }} />
-                  <Skeleton active paragraph={{ rows: 4 }} />
-                  
-                  <Skeleton.Input active size="default" style={{ width: '45%', marginTop: 16, marginBottom: 12 }} />
-                  <Skeleton active paragraph={{ rows: 2 }} />
-                  
-                  <Skeleton.Input active size="default" style={{ width: '55%', marginTop: 16, marginBottom: 12 }} />
-                  <Skeleton active paragraph={{ rows: 3 }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    <Skeleton.Input active size="large" style={{ width: '60%', borderRadius: '8px' }} />
+                    <Skeleton active paragraph={{ rows: 2 }} />
+                    
+                    <Skeleton.Input active size="default" style={{ width: '40%', borderRadius: '6px' }} />
+                    <Skeleton active paragraph={{ rows: 2 }} />
+                    
+                    <Skeleton.Input active size="default" style={{ width: '50%', borderRadius: '6px' }} />
+                    <Skeleton active paragraph={{ rows: 2 }} />
+                    
+                    <Skeleton.Input active size="default" style={{ width: '45%', borderRadius: '6px' }} />
+                    <Skeleton active paragraph={{ rows: 2 }} />
+                    
+                    <Skeleton.Input active size="default" style={{ width: '55%', borderRadius: '6px' }} />
+                    <Skeleton active paragraph={{ rows: 2 }} />
+                  </div>
                 </div>
               </div>
 
               {/* Bottom Controls Preview */}
               <div style={{ 
-                padding: '8px 16px', 
-                borderTop: '1px solid #e8e8e8',
-                background: '#fafafa',
-                flexShrink: 0
+                padding: '16px 24px', 
+                background: 'rgba(248, 250, 252, 0.8)',
+                borderRadius: '0 0 16px 0',
+                flexShrink: 0,
+                borderTop: '1px solid rgba(0, 0, 0, 0.06)'
               }}>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <Skeleton.Button active size="small" style={{ width: 60 }} />
-                  <Skeleton.Button active size="small" style={{ width: 60 }} />
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                  <Skeleton.Button active size="small" style={{ width: 80, borderRadius: '8px' }} />
+                  <Skeleton.Button active size="small" style={{ width: 80, borderRadius: '8px' }} />
                   <div style={{ marginLeft: 'auto' }}>
-                    <Skeleton.Input active size="small" style={{ width: 80 }} />
+                    <Skeleton.Input active size="small" style={{ width: 100, borderRadius: '6px' }} />
                   </div>
                 </div>
               </div>
@@ -447,10 +522,15 @@ Rules:
             {/* Left Panel - Chat */}
             <div style={{ 
               width: '40%', 
-              borderRight: '1px solid #e8e8e8',
               display: 'flex',
               flexDirection: 'column',
-              minHeight: 0
+              minHeight: 0,
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '16px 0 0 16px',
+              margin: '16px 0 16px 16px',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+              overflow: 'hidden'
             }}>
               <ChatPanel
                 chatHistory={chatHistory}
@@ -465,94 +545,127 @@ Rules:
               flex: 1, 
               display: 'flex', 
               flexDirection: 'column',
-              minHeight: 0
+              minHeight: 0,
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: '0 16px 16px 0',
+              margin: '16px 16px 16px 0',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+              overflow: 'hidden'
             }}>
               {/* Outline Editor */}
-              <div style={{ flex: 1, padding: 16, overflow: 'auto' }}>
+              <div style={{ 
+                flex: 1, 
+                padding: 24, 
+                overflow: 'auto',
+                background: 'linear-gradient(135deg, #fafbfc 0%, #f8fafc 100%)'
+              }}>
                 {outlineText.length > 0 ? (
-                  <MDXEditor
-                    ref={editorRef}
-                    key={`mdx-editor-${editorKey}`}
-                    markdown={outlineText}
-                    onChange={(value: string) => setOutlineText(value)}
-                    suppressHtmlProcessing={true}
-                    plugins={[
-                      headingsPlugin(),
-                      listsPlugin(),
-                      quotePlugin(),
-                      thematicBreakPlugin(),
-                      markdownShortcutPlugin(),
-                      linkPlugin(),
-                      tablePlugin(),
-                      codeBlockPlugin({
-                        defaultCodeBlockLanguage: ''
-                      }),
-                      codeMirrorPlugin({
-                        codeBlockLanguages: {
-                          js: 'JavaScript',
-                          ts: 'TypeScript',
-                          jsx: 'JavaScript (React)',
-                          tsx: 'TypeScript (React)',
-                          html: 'HTML',
-                          css: 'CSS',
-                          json: 'JSON',
-                          markdown: 'Markdown',
-                          bash: 'Bash',
-                          python: 'Python',
-                          '': 'Plain Text'
-                        }
-                      }),
-                      diffSourcePlugin({
-                        viewMode: 'rich-text',
-                        diffMarkdown: ''
-                      }),
-                      toolbarPlugin({
-                        toolbarContents: () => (
-                          <>
-                            {/* <UndoRedo /> */}
-                            {/* <Separator /> */}
-                            <BoldItalicUnderlineToggles />
-                            <CodeToggle />
-                            <Separator />
-                            <BlockTypeSelect />
-                            <Separator />
-                            <ListsToggle />
-                            <Separator />
-                            <CreateLink />
-                            <InsertTable />
-                            <Separator />
-                            <InsertCodeBlock />
-                            <InsertThematicBreak />
-                          </>
-                        )
-                      })
-                    ]}
-                  />
+                  <div style={{
+                    background: 'white',
+                    borderRadius: '16px',
+                    padding: '24px',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                    border: '1px solid rgba(0, 0, 0, 0.06)',
+                    minHeight: '100%'
+                  }}>
+                    <MDXEditor
+                      ref={editorRef}
+                      key={`mdx-editor-${editorKey}`}
+                      markdown={outlineText}
+                      onChange={(value: string) => setOutlineText(value)}
+                      suppressHtmlProcessing={true}
+                      plugins={[
+                        headingsPlugin(),
+                        listsPlugin(),
+                        quotePlugin(),
+                        thematicBreakPlugin(),
+                        markdownShortcutPlugin(),
+                        linkPlugin(),
+                        tablePlugin(),
+                        codeBlockPlugin({
+                          defaultCodeBlockLanguage: ''
+                        }),
+                        codeMirrorPlugin({
+                          codeBlockLanguages: {
+                            js: 'JavaScript',
+                            ts: 'TypeScript',
+                            jsx: 'JavaScript (React)',
+                            tsx: 'TypeScript (React)',
+                            html: 'HTML',
+                            css: 'CSS',
+                            json: 'JSON',
+                            markdown: 'Markdown',
+                            bash: 'Bash',
+                            python: 'Python',
+                            '': 'Plain Text'
+                          }
+                        }),
+                        diffSourcePlugin({
+                          viewMode: 'rich-text',
+                          diffMarkdown: ''
+                        }),
+                        toolbarPlugin({
+                          toolbarContents: () => (
+                            <>
+                              {/* <UndoRedo /> */}
+                              {/* <Separator /> */}
+                              <BoldItalicUnderlineToggles />
+                              <CodeToggle />
+                              <Separator />
+                              <BlockTypeSelect />
+                              <Separator />
+                              <ListsToggle />
+                              <Separator />
+                              <CreateLink />
+                              <InsertTable />
+                              <Separator />
+                              <InsertCodeBlock />
+                              <InsertThematicBreak />
+                            </>
+                          )
+                        })
+                      ]}
+                    />
+                  </div>
                 ) : (
                   <div style={{ 
-                    border: '1px dashed #ccc', 
-                    padding: 20, 
+                    border: '2px dashed #e5e7eb', 
+                    padding: 48, 
                     textAlign: 'center', 
-                    color: '#666',
-                    borderRadius: 4,
+                    color: '#6b7280',
+                    borderRadius: 16,
                     height: '100%',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    background: 'white',
+                    flexDirection: 'column'
                   }}>
-                    No content to display
+                    <div style={{ 
+                      fontSize: 48, 
+                      marginBottom: 16,
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text'
+                    }}>📝</div>
+                    <div style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>No content yet</div>
+                    <div style={{ fontSize: 14, color: '#9ca3af' }}>Your outline will appear here</div>
                   </div>
                 )}
               </div>
 
               {/* Bottom Controls */}
               <div style={{ 
-                padding: '8px 16px', 
-                borderTop: '1px solid #e8e8e8',
-                background: '#fafafa',
-                flexShrink: 0
+                padding: '16px 24px', 
+                background: 'rgba(248, 250, 252, 0.9)',
+                borderRadius: '0 0 16px 0',
+                flexShrink: 0,
+                borderTop: '1px solid rgba(0, 0, 0, 0.06)',
+                backdropFilter: 'blur(10px)'
               }}>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', fontSize: 12 }}>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', fontSize: 12, alignItems: 'center' }}>
                   <Button 
                     size="small"
                     onClick={() => {
@@ -560,7 +673,17 @@ Rules:
                       message.success('Content copied to clipboard!');
                     }}
                     disabled={!outlineText}
-                    type="default"
+                    type="primary"
+                    style={{
+                      borderRadius: '8px',
+                      background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                      border: 'none',
+                      boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)',
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
                   >
                     📋 Copy
                   </Button>
@@ -568,16 +691,31 @@ Rules:
                     size="small"
                     onClick={() => setOutlineText('')}
                     disabled={isGenerating || isChatProcessing}
+                    style={{
+                      borderRadius: '8px',
+                      border: '1px solid #e5e7eb',
+                      background: 'white',
+                      color: '#6b7280',
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
                   >
                     🗑️ Clear
                   </Button>
                   <div style={{ 
-                    fontSize: 11, 
-                    color: '#999', 
+                    fontSize: 12, 
+                    color: '#9ca3af', 
                     alignSelf: 'center',
-                    marginLeft: 'auto'
+                    marginLeft: 'auto',
+                    padding: '4px 12px',
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    borderRadius: '6px',
+                    border: '1px solid rgba(0, 0, 0, 0.06)',
+                    fontWeight: 500
                   }}>
-                    {outlineText.length} characters
+                    {outlineText.length.toLocaleString()} characters
                   </div>
                 </div>
               </div>
