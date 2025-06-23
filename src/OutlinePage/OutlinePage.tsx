@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Button, Skeleton, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import OpenAI from "openai";
-import ChatPanel, { ChatMessage } from "../components/ChatPanel";
+import ChatPanel from "../components/ChatPanel";
+import { useOutlineContext, FormData, ChatMessage } from "../contexts/OutlineContext";
 import { 
   MDXEditor, 
   headingsPlugin, 
@@ -29,25 +30,42 @@ import {
 } from '@mdxeditor/editor';
 import '@mdxeditor/editor/style.css';
 
-// Interface for the form data structure
-interface FormData {
-  aiProvider: 'deepseek' | 'openai';
-  apiKey: string;
-  appDescription: string;
-  processedAt: string;
-}
-
 const OutlinePage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const formData = location.state?.formData as FormData;
-  const [outlineText, setOutlineText] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [initialGenerationComplete, setInitialGenerationComplete] = useState(false);
-  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
-  const [isChatProcessing, setIsChatProcessing] = useState(false);
+  
+  // Use context for persistent data
+  const {
+    outlineData,
+    setFormData,
+    setOutlineText,
+    setChatHistory,
+    setInitialGenerationComplete,
+    setIsGenerating,
+    setIsChatProcessing
+  } = useOutlineContext();
+
+  // Extract data from context
+  const {
+    formData,
+    outlineText,
+    chatHistory,
+    initialGenerationComplete,
+    isGenerating,
+    isChatProcessing
+  } = outlineData;
+
+  // Local state for editor key to force refresh
   const [editorKey, setEditorKey] = useState(0);
   const editorRef = useRef<MDXEditorMethods>(null);
+
+  // If navigating with new form data, update context
+  const locationFormData = location.state?.formData as FormData | undefined;
+  useEffect(() => {
+    if (locationFormData && (!formData || locationFormData.processedAt !== formData.processedAt)) {
+      setFormData(locationFormData);
+    }
+  }, [locationFormData, formData, setFormData]);
 
   // Unified AI API calling function
   const callAI = async (prompt: string, apiKey: string, provider: 'openai' | 'deepseek'): Promise<string> => {
@@ -75,7 +93,7 @@ const OutlinePage: React.FC = () => {
           { role: "user", content: prompt }
         ],
         model: apiConfig.model,
-        max_tokens: 2000,
+        max_tokens: 5000,
         temperature: 0.7,
       });
 
@@ -164,7 +182,7 @@ const prompt = `${formData.appDescription}`;
       timestamp: new Date()
     };
     
-    setChatHistory(prev => [...prev, userChatMessage]);
+    setChatHistory((prev: ChatMessage[]) => [...prev, userChatMessage]);
     setIsChatProcessing(true);
 
     try {
@@ -256,7 +274,7 @@ CRITICAL RULES:
         timestamp: new Date()
       };
       
-      setChatHistory(prev => [...prev, aiChatMessage]);
+      setChatHistory((prev: ChatMessage[]) => [...prev, aiChatMessage]);
 
       // Update outline if AI provided changes
       if (parsedResponse.outlineUpdate && 
@@ -284,7 +302,7 @@ CRITICAL RULES:
         timestamp: new Date()
       };
       
-      setChatHistory(prev => [...prev, errorMessage]);
+      setChatHistory((prev: ChatMessage[]) => [...prev, errorMessage]);
       message.error('Failed to process chat message');
     } finally {
       setIsChatProcessing(false);
@@ -315,7 +333,7 @@ CRITICAL RULES:
       // Auto-generate AI outline when form data is available
       generateAIOutline();
     }
-  }, [formData]);
+  }, [formData, initialGenerationComplete]);
 
   // Handle case where user navigates directly to outline without form data
   if (!formData) {
@@ -327,8 +345,8 @@ CRITICAL RULES:
           type="warning"
           showIcon
           action={
-            <Button size="small" type="primary" onClick={() => window.history.back()}>
-              Go Back to Form
+            <Button size="small" type="primary" onClick={() => navigate('/')}>
+              Go to Landing Page
             </Button>
           }
         />

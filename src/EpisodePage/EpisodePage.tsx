@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { Alert, Button, Skeleton, message, Select, Badge, Card, Typography, Tabs } from "antd";
 import { useLocation } from "react-router-dom";
 import OpenAI from "openai";
-import ChatPanel, { ChatMessage } from "../components/ChatPanel";
+import ChatPanel from "../components/ChatPanel";
+import { useOutlineContext, FormData, ChatMessage } from "../contexts/OutlineContext";
 import { 
   MDXEditor, 
   headingsPlugin, 
@@ -32,14 +33,6 @@ import '@mdxeditor/editor/style.css';
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-// Interface for the form data structure
-interface FormData {
-  aiProvider: 'deepseek' | 'openai';
-  apiKey: string;
-  appDescription: string;
-  processedAt: string;
-}
-
 // Interface for episode data
 interface EpisodeData {
   id: string;
@@ -55,8 +48,11 @@ type ChatContext = 'global' | 'episode';
 
 const EpisodePage: React.FC = () => {
   const location = useLocation();
-  const formData = location.state?.formData as FormData;
-  const outlineText = location.state?.outlineText as string;
+  const { outlineData } = useOutlineContext();
+  
+  // Get data from context or location state (for backward compatibility)
+  const formData = outlineData.formData || (location.state?.formData as FormData);
+  const outlineText = outlineData.outlineText || (location.state?.outlineText as string);
   
   // Episode management state
   const [episodes, setEpisodes] = useState<EpisodeData[]>([]);
@@ -516,8 +512,8 @@ Return the complete script in markdown format.`;
           type="warning"
           showIcon
           action={
-            <Button size="small" type="primary" onClick={() => window.history.back()}>
-              Go Back to Outline
+            <Button size="small" type="primary" onClick={() => window.location.href = '/outline'}>
+              Go to Outline Page
             </Button>
           }
         />

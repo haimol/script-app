@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Input, Button, Card, Typography, Radio } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useOutlineContext } from "../contexts/OutlineContext";
 import "./ApiConfigForm.css";
 
 const { Text } = Typography;
@@ -27,6 +28,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
 }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const { setFormData, hasValidOutlineData, clearOutlineData } = useOutlineContext();
 
   // Handle form submission
   const handleFinish = (values: ApiConfigFormData) => {
@@ -39,16 +41,20 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       // TODO: Add any other processing logic here
     };
     
-    console.log('📤 Processing form data and navigating to outline...');
+    console.log('📤 Clearing existing data and storing new form data...');
     
-    // Pass data through router state to outline page
+    // Clear existing data first, then set new data for fresh start
+    clearOutlineData();
+    setFormData(parsedData);
+    
+    // Navigate to outline page
     navigate('/outline', { 
       state: { formData: parsedData } 
     });
     
     // Also call the parent callback for backward compatibility
-    onSubmit(values);
-    console.log('✅ Navigation completed');
+    onSubmit?.(values);
+    console.log('✅ Navigation completed with fresh data');
   };
 
   // Handle keyboard shortcut (Cmd+Enter / Ctrl+Enter)
@@ -60,6 +66,54 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
 
   return (
     <div className="api-config-form-container">
+      {/* Show continue editing option if there's existing data */}
+      {hasValidOutlineData() && (
+        <Card 
+          style={{ 
+            marginBottom: 24,
+            borderRadius: 8,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            borderColor: '#52c41a'
+          }}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <Text strong style={{ color: '#52c41a', fontSize: 16 }}>
+              ✨ You have an existing outline!
+            </Text>
+            <br />
+            <Text type="secondary" style={{ display: 'block', margin: '8px 0 16px' }}>
+              Continue working on your script or create a new one below
+            </Text>
+            <Button 
+              type="primary" 
+              size="large"
+              onClick={() => navigate('/outline')}
+              style={{ marginRight: 12 }}
+            >
+              Continue Editing Outline
+            </Button>
+            <Button 
+              size="large"
+              onClick={() => navigate('/episodes')}
+            >
+              Manage Episodes
+            </Button>
+            <br />
+            <Button 
+              type="link" 
+              size="small"
+              onClick={() => {
+                clearOutlineData();
+                form.resetFields();
+              }}
+              style={{ marginTop: 8, color: '#ff4d4f' }}
+            >
+              Start Fresh (Clear All Data)
+            </Button>
+          </div>
+        </Card>
+      )}
+      
       <Card 
         className="api-config-card"
         style={{ 
@@ -67,6 +121,25 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)' 
         }}
       >
+        {hasValidOutlineData() && (
+          <div style={{ 
+            marginBottom: 24, 
+            padding: '12px 16px', 
+            background: '#fff7e6', 
+            border: '1px solid #ffd591',
+            borderRadius: 6,
+            textAlign: 'center'
+          }}>
+            <Text style={{ color: '#d46b08', fontWeight: 500 }}>
+              ⚠️ Creating New Project
+            </Text>
+            <br />
+            <Text type="secondary" style={{ fontSize: 12 }}>
+              Submitting this form will clear your current outline and create a new project
+            </Text>
+          </div>
+        )}
+        
         <Form
           form={form}
           layout="vertical"
@@ -149,7 +222,12 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
               className="submit-button"
               onClick={() => console.log('🔴 Submit button clicked')}
             >
-              {loading ? 'Processing...' : 'Submit'}
+              {loading 
+                ? 'Processing...' 
+                : hasValidOutlineData() 
+                  ? 'Create New Project' 
+                  : 'Create Project'
+              }
             </Button>
             <Text className="keyboard-hint">
               ⌘+Enter

@@ -3,17 +3,20 @@ import {
     HomeOutlined,
     EditOutlined,
     FileTextOutlined,
-    SettingOutlined
+    SettingOutlined,
+    CheckCircleOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme, Badge } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useOutlineContext } from '../contexts/OutlineContext';
 
 const { Sider } = Layout;
 
 const Side: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { hasValidOutlineData } = useOutlineContext();
     const [collapsed, setCollapsed] = useState(window.innerWidth < 1000);
     const [current, setCurrent] = useState('home');
 
@@ -57,12 +60,26 @@ const Side: React.FC = () => {
             icon: <FileTextOutlined />,
             children: [
                 {
-                    label: 'Outline Editor',
+                    label: (
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            Outline Editor
+                            {hasValidOutlineData() && (
+                                <CheckCircleOutlined style={{ color: '#52c41a', fontSize: '12px' }} />
+                            )}
+                        </span>
+                    ),
                     key: 'outline',
                     icon: <EditOutlined />,
                 },
                 {
-                    label: 'Episode Manager',
+                    label: (
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            Episode Manager
+                            {hasValidOutlineData() && (
+                                <Badge size="small" count="●" style={{ backgroundColor: '#52c41a' }} />
+                            )}
+                        </span>
+                    ),
                     key: 'episodes',
                     icon: <FileTextOutlined />,
                 },
