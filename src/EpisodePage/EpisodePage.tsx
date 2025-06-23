@@ -142,11 +142,14 @@ IMPORTANT: Return ONLY valid JSON in this exact format:
   ]
 }
 
-Rules:
+CRITICAL RULES:
 1. Return ONLY the JSON object, nothing else
 2. Create 3-6 episodes based on the content complexity
-3. Each episode outline should be detailed with scene descriptions
-4. Use proper markdown formatting in the outline field`;
+3. Each episode outline should be COMPLETE FULL EPISODE OUTLINE in markdown format
+4. Include detailed scene descriptions, character development, dialogue, and plot points
+5. DO NOT provide brief summaries - provide actual complete episode content
+6. Each outline should be production-ready and detailed
+7. Use proper markdown formatting with headers and structure`;
 
       console.log(`🤖 Calling ${formData.aiProvider} to generate episodes...`);
       const aiResponse = await callAI(prompt, formData.apiKey, formData.aiProvider);
@@ -242,24 +245,28 @@ IMPORTANT: Return ONLY valid JSON in this exact format:
     {
       "id": "episode-1",
       "title": "Updated title or null if no change",
-      "outline": "Updated outline or null if no change"
+      "outline": "COMPLETE FULL EPISODE OUTLINE in markdown format, or null if no change"
     }
   ],
   "newEpisodes": [
     {
       "title": "New episode title",
-      "outline": "New episode outline"
+      "outline": "COMPLETE FULL EPISODE OUTLINE in markdown format"
     }
   ],
   "deletedEpisodeIds": ["episode-id-to-delete"],
   "updateReason": "Brief explanation of changes made"
 }
 
-Rules:
-1. Only include episodeUpdates for episodes that actually changed
-2. Only include newEpisodes if new episodes should be added
-3. Only include deletedEpisodeIds if episodes should be removed
-4. Return empty arrays if no changes needed`;
+CRITICAL RULES:
+1. For episodeUpdates: If an episode needs changes, provide the COMPLETE FULL episode outline, not just a summary of changes
+2. Each episode outline should be detailed with scenes, character development, dialogue, and plot points
+3. DO NOT provide brief descriptions - provide the actual complete episode content
+4. Only include episodeUpdates for episodes that actually changed
+5. Only include newEpisodes if new episodes should be added
+6. Only include deletedEpisodeIds if episodes should be removed
+7. Return empty arrays if no changes needed
+8. When updating episodes due to deletions, ensure continuity and completeness`;
 
       } else {
         // Episode-specific context
@@ -293,10 +300,13 @@ IMPORTANT: Return ONLY valid JSON in this exact format:
   "updateReason": "Brief explanation of what was changed"
 }
 
-Rules:
+CRITICAL RULES:
 1. Return ONLY the JSON object, nothing else
-2. If updating the outline, provide the COMPLETE updated outline
-3. Focus only on this specific episode`;
+2. For outlineUpdate: Provide the COMPLETE FULL episode outline, not just a summary of changes
+3. Include detailed scenes, character development, dialogue, and plot points
+4. DO NOT provide brief descriptions - provide the actual complete episode content
+5. Maintain continuity with the overall series
+6. Focus only on this specific episode`;
       }
 
       console.log(`🤖 Processing ${chatContext} chat message...`);

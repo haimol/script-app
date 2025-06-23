@@ -190,11 +190,14 @@ IMPORTANT: You MUST respond with ONLY valid JSON in this exact format (no extra 
   "updateReason": "Brief explanation of what was changed or why no changes were made"
 }
 
-Rules:
+CRITICAL RULES:
 1. Return ONLY the JSON object, nothing else
-2. If updating the outline, provide the COMPLETE updated outline, not just changes
-3. Use null (not "null") for outlineUpdate if no changes are needed
-4. Keep the outline in markdown format with proper headers and structure`;
+2. For outlineUpdate: Provide the COMPLETE FULL outline, not just a summary of changes
+3. Include detailed scenes, character development, dialogue, and plot points
+4. DO NOT provide brief descriptions - provide the actual complete outline content
+5. Maintain professional script formatting and structure
+6. Use null (not "null") for outlineUpdate if no changes are needed
+7. Keep the outline in markdown format with proper headers and structure`;
 
       console.log(`🤖 Processing chat message with ${formData.aiProvider}...`);
       const aiResponse = await callAI(chatPrompt, formData.apiKey, formData.aiProvider);
