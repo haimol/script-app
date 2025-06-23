@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Alert, Button, Spin, Skeleton, message, Divider } from "antd";
-import { useLocation, Navigate } from "react-router-dom";
+import { Alert, Button, Skeleton, message } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 import OpenAI from "openai";
 import ChatPanel, { ChatMessage } from "../components/ChatPanel";
 import { 
@@ -11,12 +11,10 @@ import {
   thematicBreakPlugin,
   markdownShortcutPlugin,
   linkPlugin,
-  linkDialogPlugin,
   tablePlugin,
   codeBlockPlugin,
   codeMirrorPlugin,
   toolbarPlugin,
-  UndoRedo,
   BoldItalicUnderlineToggles,
   BlockTypeSelect,
   CreateLink,
@@ -41,6 +39,7 @@ interface FormData {
 
 const OutlinePage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const formData = location.state?.formData as FormData;
   const [outlineText, setOutlineText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -287,6 +286,24 @@ Rules:
     } finally {
       setIsChatProcessing(false);
     }
+  };
+
+  // Function to proceed to episode management
+  const proceedToEpisodes = () => {
+    if (!outlineText.trim()) {
+      message.error('Please create an outline first before proceeding to episodes');
+      return;
+    }
+
+    // Get the current content from the editor (real-time version)
+    const currentOutlineContent = editorRef.current?.getMarkdown() || outlineText;
+    
+    navigate('/episodes', { 
+      state: { 
+        formData: formData,
+        outlineText: currentOutlineContent
+      } 
+    });
   };
 
   // Generate outline content from form data
@@ -703,6 +720,24 @@ Rules:
                     }}
                   >
                     🗑️ Clear
+                  </Button>
+                  <Button 
+                    size="small"
+                    type="primary"
+                    onClick={proceedToEpisodes}
+                    disabled={isGenerating || isChatProcessing || !outlineText.trim()}
+                    style={{
+                      borderRadius: '8px',
+                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                      border: 'none',
+                      boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    🎬 Create Episodes
                   </Button>
                   <div style={{ 
                     fontSize: 12, 

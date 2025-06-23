@@ -37,6 +37,8 @@ const Side: React.FC = () => {
             setCurrent('home');
         } else if (path === '/outline') {
             setCurrent('outline');
+        } else if (path === '/episodes') {
+            setCurrent('episodes');
         } else {
             setCurrent('home');
         }
@@ -58,6 +60,11 @@ const Side: React.FC = () => {
                     label: 'Outline Editor',
                     key: 'outline',
                     icon: <EditOutlined />,
+                },
+                {
+                    label: 'Episode Manager',
+                    key: 'episodes',
+                    icon: <FileTextOutlined />,
                 },
                 // TODO: Add more script tools here as you develop them
                 // {
@@ -95,6 +102,9 @@ const Side: React.FC = () => {
                 break;
             case 'outline':
                 navigate('/outline');
+                break;
+            case 'episodes':
+                navigate('/episodes');
                 break;
             case 'settings':
                 // TODO: Navigate to settings page when created

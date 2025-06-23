@@ -5,6 +5,7 @@ import "./Menu.css";
 import { ApiConfigFormData } from "../LandingPage/LandingPage";
 import LandingPage from "../LandingPage/LandingPage";
 import OutlinePage from "../OutlinePage/OutlinePage";
+import EpisodePage from "../EpisodePage/EpisodePage";
 import Side from "../components/Side";
 
 const { Header, Content } = Layout;
@@ -123,6 +124,7 @@ const MainFramework: React.FC = () => {
             />
           } />
           <Route path="/outline" element={<OutlinePage />} />
+          <Route path="/episodes" element={<EpisodePage />} />
         </Routes>
         </Content>
       </Layout>
