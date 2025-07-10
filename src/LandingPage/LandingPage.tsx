@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Button, Card, Typography, Radio, Space, Divider } from "antd";
+import { Form, Input, Button, Card, Typography, Radio, Space } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -185,7 +185,12 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
   };
 
   return (
-    <div className="api-config-form-container">
+    <div className="api-config-form-container" style={{ 
+      maxWidth: '1200px', 
+      margin: '0 auto', 
+      padding: '24px',
+      background: '#f8fafc'
+    }}>
       {/* Show continue editing option if there's existing data */}
       {hasValidOutlineData() && (
         <Card 
@@ -313,293 +318,365 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             />
           </Form.Item>
 
-          {/* Story Synopsis Field */}
-          <Form.Item 
-            label="故事梗概 (Story Synopsis):" 
-            name="storySynopsis"
-            rules={[
-              { required: true, message: '故事梗概 is required!' }
-            ]}
-            tooltip="Provide a brief synopsis of your story"
-          >
-            <TextArea 
-              rows={3}
-              placeholder="请输入故事梗概..."
-              className="app-description-textarea"
-              showCount
-              maxLength={1000}
-            />
-          </Form.Item>
-
-          <Divider />
-
-          {/* Character Elements Section */}
+          {/* Story Synopsis Field - Enhanced */}
           <Card 
-            title={
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>人物要素 (Character Elements)</span>
-                <Button 
-                  type="primary" 
-                  icon={<PlusOutlined />} 
-                  size="small"
-                  onClick={addCharacter}
-                >
-                  添加人物
-                </Button>
-              </div>
-            }
-            style={{ marginBottom: 16 }}
+            style={{ 
+              marginBottom: 24, 
+              borderRadius: 12,
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              borderLeft: '4px solid #fa8c16'
+            }}
+            title={<span style={{ fontSize: 16, fontWeight: 600, color: '#fa8c16' }}>故事梗概 (Story Synopsis)</span>}
           >
-            <Space direction="vertical" style={{ width: '100%' }} size="middle">
-              {projectData.characters.map((character, index) => (
-                <Card 
-                  key={character.id}
-                  size="small"
-                  title={`人物 ${index + 1}`}
-                  extra={
-                    projectData.characters.length > 1 ? (
-                      <Button 
-                        type="text" 
-                        danger 
-                        icon={<DeleteOutlined />}
-                        size="small"
-                        onClick={() => removeCharacter(character.id)}
-                      />
-                    ) : null
-                  }
-                >
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                    <Form.Item 
-                      label="身份:" 
-                      style={{ marginBottom: 8 }}
-                      required
-                    >
-                      <Input 
-                        placeholder="角色身份"
-                        value={character.identity}
-                        onChange={(e) => updateCharacter(character.id, 'identity', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="欲望:" 
-                      style={{ marginBottom: 8 }}
-                      required
-                    >
-                      <Input 
-                        placeholder="角色欲望"
-                        value={character.desire}
-                        onChange={(e) => updateCharacter(character.id, 'desire', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="动作:" 
-                      style={{ marginBottom: 8 }}
-                      required
-                    >
-                      <Input 
-                        placeholder="角色动作"
-                        value={character.action}
-                        onChange={(e) => updateCharacter(character.id, 'action', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="设计思路:" 
-                      style={{ marginBottom: 8 }}
-                    >
-                      <TextArea 
-                        rows={2}
-                        placeholder="设计思路 (可选)"
-                        value={character.designConcept}
-                        onChange={(e) => updateCharacter(character.id, 'designConcept', e.target.value)}
-                      />
-                    </Form.Item>
-                  </div>
-                </Card>
-              ))}
-            </Space>
+            <Form.Item 
+              name="storySynopsis"
+              rules={[
+                { required: true, message: '请输入故事梗概' }
+              ]}
+              style={{ marginBottom: 0 }}
+            >
+              <TextArea 
+                rows={5}
+                placeholder="请详细描述您的故事：包括背景设定、主要情节、核心冲突、目标受众等信息..."
+                showCount
+                maxLength={1000}
+                style={{ borderRadius: 8, fontSize: 14 }}
+              />
+            </Form.Item>
           </Card>
 
-          {/* Event Elements Section */}
-          <Card 
-            title={
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>事件要素 (Event Elements)</span>
-                <Button 
-                  type="primary" 
-                  icon={<PlusOutlined />} 
-                  size="small"
-                  onClick={addEvent}
-                >
-                  添加事件
-                </Button>
-              </div>
-            }
-            style={{ marginBottom: 16 }}
-          >
-            <Space direction="vertical" style={{ width: '100%' }} size="middle">
-              {projectData.events.map((event, index) => (
-                <Card 
-                  key={event.id}
-                  size="small"
-                  title={`事件 ${index + 1}`}
-                  extra={
-                    projectData.events.length > 1 ? (
-                      <Button 
-                        type="text" 
-                        danger 
-                        icon={<DeleteOutlined />}
-                        size="small"
-                        onClick={() => removeEvent(event.id)}
-                      />
-                    ) : null
-                  }
-                >
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                    <Form.Item 
-                      label="核心问题:" 
-                      style={{ marginBottom: 8 }}
-                      required
+          {/* Two-Column Layout for Form Sections */}
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))', 
+            gap: '24px',
+            marginBottom: '24px'
+          }}>
+            {/* Left Column */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Character Elements Section */}
+              <Card 
+                title={
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 16, fontWeight: 600, color: '#1890ff' }}>人物要素 (Character Elements)</span>
+                    <Button 
+                      type="primary" 
+                      icon={<PlusOutlined />} 
+                      size="small"
+                      onClick={addCharacter}
                     >
-                      <Input 
-                        placeholder="核心问题"
-                        value={event.coreProblem}
-                        onChange={(e) => updateEvent(event.id, 'coreProblem', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="主要障碍:" 
-                      style={{ marginBottom: 8 }}
-                      required
-                    >
-                      <Input 
-                        placeholder="主要障碍"
-                        value={event.mainObstacle}
-                        onChange={(e) => updateEvent(event.id, 'mainObstacle', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="结果:" 
-                      style={{ marginBottom: 8 }}
-                      required
-                    >
-                      <Input 
-                        placeholder="事件结果"
-                        value={event.result}
-                        onChange={(e) => updateEvent(event.id, 'result', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="设计思路:" 
-                      style={{ marginBottom: 8 }}
-                    >
-                      <TextArea 
-                        rows={2}
-                        placeholder="设计思路 (可选)"
-                        value={event.designConcept}
-                        onChange={(e) => updateEvent(event.id, 'designConcept', e.target.value)}
-                      />
-                    </Form.Item>
+                      添加人物
+                    </Button>
                   </div>
-                </Card>
-              ))}
-            </Space>
-          </Card>
+                }
+                style={{ 
+                  borderRadius: 12,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  borderLeft: '4px solid #1890ff',
+                  height: 'fit-content'
+                }}
+              >
+                <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                  {projectData.characters.map((character, index) => (
+                    <Card 
+                      key={character.id}
+                      size="small"
+                      title={`人物 ${index + 1}`}
+                      extra={
+                        projectData.characters.length > 1 ? (
+                          <Button 
+                            type="text" 
+                            danger 
+                            icon={<DeleteOutlined />}
+                            size="small"
+                            onClick={() => removeCharacter(character.id)}
+                          />
+                        ) : null
+                      }
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>身份 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="例如：主角、反派、配角"
+                              value={character.identity}
+                              onChange={(e) => updateCharacter(character.id, 'identity', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>欲望 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="核心动机"
+                              value={character.desire}
+                              onChange={(e) => updateCharacter(character.id, 'desire', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>动作 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="行为方式"
+                              value={character.action}
+                              onChange={(e) => updateCharacter(character.id, 'action', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                        </div>
+                        <Form.Item 
+                          label={<span style={{ fontWeight: 500, color: '#666' }}>设计思路</span>}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <TextArea 
+                            rows={2}
+                            placeholder="角色设计理念、背景故事、性格特点等..."
+                            value={character.designConcept}
+                            onChange={(e) => updateCharacter(character.id, 'designConcept', e.target.value)}
+                            style={{ borderRadius: 8 }}
+                          />
+                        </Form.Item>
+                      </div>
+                    </Card>
+                  ))}
+                </Space>
+              </Card>
 
-          {/* Theme Elements Section */}
-          <Card 
-            title={
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span>主题思想 (Main Theme)</span>
-                <Button 
-                  type="primary" 
-                  icon={<PlusOutlined />} 
-                  size="small"
-                  onClick={addTheme}
-                >
-                  添加主题
-                </Button>
-              </div>
-            }
-            style={{ marginBottom: 16 }}
-          >
-            <Space direction="vertical" style={{ width: '100%' }} size="middle">
-              {projectData.themes.map((theme, index) => (
-                <Card 
-                  key={theme.id}
-                  size="small"
-                  title={`主题 ${index + 1}`}
-                  extra={
-                    projectData.themes.length > 1 ? (
-                      <Button 
-                        type="text" 
-                        danger 
-                        icon={<DeleteOutlined />}
-                        size="small"
-                        onClick={() => removeTheme(theme.id)}
-                      />
-                    ) : null
-                  }
-                >
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                    <Form.Item 
-                      label="正价值:" 
-                      style={{ marginBottom: 8 }}
-                      required
+              {/* Theme Elements Section */}
+              <Card 
+                title={
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 16, fontWeight: 600, color: '#722ed1' }}>主题思想 (Main Theme)</span>
+                    <Button 
+                      type="primary" 
+                      icon={<PlusOutlined />} 
+                      size="small"
+                      onClick={addTheme}
                     >
-                      <Input 
-                        placeholder="正价值"
-                        value={theme.positiveValue}
-                        onChange={(e) => updateTheme(theme.id, 'positiveValue', e.target.value)}
-                      />
-                    </Form.Item>
-                    <Form.Item 
-                      label="负价值:" 
-                      style={{ marginBottom: 8 }}
-                      required
-                    >
-                      <Input 
-                        placeholder="负价值"
-                        value={theme.negativeValue}
-                        onChange={(e) => updateTheme(theme.id, 'negativeValue', e.target.value)}
-                      />
-                    </Form.Item>
-                                         <Form.Item 
-                       label="设计思路:" 
-                       style={{ marginBottom: 8, gridColumn: '1 / -1' }}
-                     >
-                      <TextArea 
-                        rows={2}
-                        placeholder="设计思路 (可选)"
-                        value={theme.designConcept}
-                        onChange={(e) => updateTheme(theme.id, 'designConcept', e.target.value)}
-                      />
-                    </Form.Item>
+                      添加主题
+                    </Button>
                   </div>
-                </Card>
-              ))}
-            </Space>
-          </Card>
+                }
+                style={{ 
+                  borderRadius: 12,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  borderLeft: '4px solid #722ed1',
+                  height: 'fit-content'
+                }}
+              >
+                <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                  {projectData.themes.map((theme, index) => (
+                    <Card 
+                      key={theme.id}
+                      size="small"
+                      title={`主题 ${index + 1}`}
+                      extra={
+                        projectData.themes.length > 1 ? (
+                          <Button 
+                            type="text" 
+                            danger 
+                            icon={<DeleteOutlined />}
+                            size="small"
+                            onClick={() => removeTheme(theme.id)}
+                          />
+                        ) : null
+                      }
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>正价值 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="积极价值观"
+                              value={theme.positiveValue}
+                              onChange={(e) => updateTheme(theme.id, 'positiveValue', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>负价值 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="负面价值观"
+                              value={theme.negativeValue}
+                              onChange={(e) => updateTheme(theme.id, 'negativeValue', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                        </div>
+                        <Form.Item 
+                          label={<span style={{ fontWeight: 500, color: '#666' }}>设计思路</span>}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <TextArea 
+                            rows={2}
+                            placeholder="主题探讨的深度、社会意义、价值观冲突的展现方式等..."
+                            value={theme.designConcept}
+                            onChange={(e) => updateTheme(theme.id, 'designConcept', e.target.value)}
+                            style={{ borderRadius: 8 }}
+                          />
+                        </Form.Item>
+                      </div>
+                    </Card>
+                  ))}
+                </Space>
+              </Card>
+            </div>
+
+            {/* Right Column */}
+            <div>
+              {/* Event Elements Section */}
+              <Card 
+                title={
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: 16, fontWeight: 600, color: '#52c41a' }}>事件要素 (Event Elements)</span>
+                    <Button 
+                      type="primary" 
+                      icon={<PlusOutlined />} 
+                      size="small"
+                      onClick={addEvent}
+                    >
+                      添加事件
+                    </Button>
+                  </div>
+                }
+                style={{ 
+                  borderRadius: 12,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                  borderLeft: '4px solid #52c41a',
+                  height: 'fit-content'
+                }}
+              >
+                <Space direction="vertical" style={{ width: '100%' }} size="middle">
+                  {projectData.events.map((event, index) => (
+                    <Card 
+                      key={event.id}
+                      size="small"
+                      title={`事件 ${index + 1}`}
+                      extra={
+                        projectData.events.length > 1 ? (
+                          <Button 
+                            type="text" 
+                            danger 
+                            icon={<DeleteOutlined />}
+                            size="small"
+                            onClick={() => removeEvent(event.id)}
+                          />
+                        ) : null
+                      }
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px' }}>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>核心问题 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="主要冲突点"
+                              value={event.coreProblem}
+                              onChange={(e) => updateEvent(event.id, 'coreProblem', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>主要障碍 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="阻碍因素"
+                              value={event.mainObstacle}
+                              onChange={(e) => updateEvent(event.id, 'mainObstacle', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                          <Form.Item 
+                            label={<span style={{ fontWeight: 500, color: '#333' }}>结果 *</span>}
+                            style={{ marginBottom: 0 }}
+                          >
+                            <Input 
+                              placeholder="最终结果"
+                              value={event.result}
+                              onChange={(e) => updateEvent(event.id, 'result', e.target.value)}
+                              style={{ borderRadius: 8 }}
+                            />
+                          </Form.Item>
+                        </div>
+                        <Form.Item 
+                          label={<span style={{ fontWeight: 500, color: '#666' }}>设计思路</span>}
+                          style={{ marginBottom: 0 }}
+                        >
+                          <TextArea 
+                            rows={2}
+                            placeholder="事件的设计理念、象征意义、剧情推进作用等..."
+                            value={event.designConcept}
+                            onChange={(e) => updateEvent(event.id, 'designConcept', e.target.value)}
+                            style={{ borderRadius: 8 }}
+                          />
+                        </Form.Item>
+                      </div>
+                    </Card>
+                  ))}
+                </Space>
+              </Card>
+            </div>
+          </div>
 
           {/* Submit Button with keyboard shortcut hint */}
-          <Form.Item className="submit-form-item">
+          <Form.Item style={{ 
+            marginTop: 32, 
+            marginBottom: 0, 
+            textAlign: 'center',
+            padding: '24px',
+            background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+            borderRadius: 12,
+            border: '1px solid #e2e8f0'
+          }}>
             <Button 
               type="primary" 
               htmlType="submit"
               size="large"
               loading={loading}
-              className="submit-button"
+              style={{
+                height: 48,
+                padding: '0 32px',
+                fontSize: 16,
+                fontWeight: 600,
+                borderRadius: 12,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                border: 'none',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                minWidth: 200
+              }}
               onClick={() => console.log('🔴 Submit button clicked')}
             >
               {loading 
-                ? 'Processing...' 
+                ? '🚀 Processing...' 
                 : hasValidOutlineData() 
-                  ? 'Create New Project' 
-                  : 'Create Project'
+                  ? '✨ Create New Project' 
+                  : '🎬 Create Project'
               }
             </Button>
-            <Text className="keyboard-hint">
-              ⌘+Enter
-            </Text>
+            <div style={{ marginTop: 12 }}>
+              <Text style={{ 
+                fontSize: 12, 
+                color: '#64748b',
+                background: 'rgba(255, 255, 255, 0.8)',
+                padding: '4px 12px',
+                borderRadius: 8,
+                border: '1px solid rgba(0, 0, 0, 0.06)'
+              }}>
+                快捷键: ⌘+Enter (Mac) / Ctrl+Enter (Windows)
+              </Text>
+            </div>
           </Form.Item>
         </Form>
       </Card>
