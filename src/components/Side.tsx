@@ -85,16 +85,28 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'space-between',
-                            width: '100%'
+                            width: '100%',
+                            minWidth: 0 // Allow flex item to shrink
                         }}>
-                            <span style={{ fontWeight: 500 }}>Outline Editor</span>
+                            <span style={{ 
+                                fontWeight: 500,
+                                flex: 1,
+                                minWidth: 0,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                marginRight: '8px'
+                            }}>
+                                Outline Editor
+                            </span>
                             {hasValidOutlineData() && (
                                 <CheckCircleOutlined style={{ 
                                     color: '#10b981', 
                                     fontSize: '12px',
                                     background: '#d1fae5',
                                     borderRadius: '50%',
-                                    padding: '2px'
+                                    padding: '2px',
+                                    flexShrink: 0
                                 }} />
                             )}
                         </div>
@@ -108,9 +120,20 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                             display: 'flex', 
                             alignItems: 'center', 
                             justifyContent: 'space-between',
-                            width: '100%'
+                            width: '100%',
+                            minWidth: 0 // Allow flex item to shrink
                         }}>
-                            <span style={{ fontWeight: 500 }}>Episode Manager</span>
+                            <span style={{ 
+                                fontWeight: 500,
+                                flex: 1,
+                                minWidth: 0,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                                marginRight: '8px'
+                            }}>
+                                Episode Manager
+                            </span>
                             {hasValidOutlineData() && (
                                 <Badge 
                                     size="small" 
@@ -118,7 +141,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                                     style={{ 
                                         backgroundColor: '#10b981',
                                         boxShadow: '0 0 0 2px #d1fae5'
-                                    }} 
+                                    }}
                                 />
                             )}
                         </div>
