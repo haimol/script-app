@@ -221,7 +221,7 @@ CRITICAL RULES:
         currentChatHistory = globalChatHistory;
         chatPrompt = `You are managing a multi-episode script project. Here is the context:
 
-ORIGINAL OUTLINE: "${formData.appDescription}"
+ORIGINAL OUTLINE: "${outlineText}"
 
 ALL CURRENT EPISODES:
 ${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}

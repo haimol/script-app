@@ -3,7 +3,7 @@ import { Alert, Button, Skeleton, message } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import OpenAI from "openai";
 import ChatPanel from "../components/ChatPanel";
-import { useOutlineContext, FormData, ChatMessage } from "../contexts/OutlineContext";
+import { useOutlineContext, FormData, ChatMessage, parseProjectData } from "../contexts/OutlineContext";
 import { 
   MDXEditor, 
   headingsPlugin, 
@@ -121,22 +121,64 @@ const OutlinePage: React.FC = () => {
     setIsGenerating(true);
 
     try {
-      // Create prompt based on user's description
-//       const prompt = `Create a detailed script outline for the following project:
+      // Parse the structured project data
+      const projectData = parseProjectData(formData.projectDataJson);
+      
+      if (!projectData) {
+        throw new Error('Invalid project data format');
+      }
 
-// Description: ${formData.appDescription}
+      // Create comprehensive prompt using structured data
+      const prompt = `请根据以下结构化信息创建详细的专业剧本大纲:
 
-// Please provide a comprehensive script outline with the following structure:
-// 1. Title and logline
-// 2. Character descriptions
-// 3. Scene-by-scene breakdown
-// 4. Key dialogue points
-// 5. Visual elements and staging notes
+故事梗概:
+${projectData.storySynopsis}
 
-// Make it professional and ready for production use.`;
+人物要素:
+${projectData.characters.map((char, i) => `
+人物 ${i + 1}:
+• 身份: ${char.identity}
+• 欲望: ${char.desire}
+• 动作: ${char.action}
+• 设计思路: ${char.designConcept}
+`).join('')}
 
-//for testing
-const prompt = `${formData.appDescription}`;
+事件要素:
+${projectData.events.map((event, i) => `
+事件 ${i + 1}:
+• 核心问题: ${event.coreProblem}
+• 主要障碍: ${event.mainObstacle}
+• 结果: ${event.result}
+• 设计思路: ${event.designConcept}
+`).join('')}
+
+主题思想:
+${projectData.themes.map((theme, i) => `
+主题 ${i + 1}:
+• 正价值: ${theme.positiveValue}
+• 负价值: ${theme.negativeValue}
+• 设计思路: ${theme.designConcept}
+`).join('')}
+
+CRITICAL RULES:
+1. 返回完整的专业剧本大纲，使用Markdown格式
+2. 包含详细的场景、角色发展、对话要点和情节发展
+3. 不要提供简单摘要 - 提供实际完整的大纲内容
+4. 保持专业的剧本格式和结构
+5. 确保所有人物、事件和主题要素都被有机地融入到大纲中
+6. 使用清晰的章节分组和场景描述
+7. 包含具体的对话示例和视觉描述
+
+请创建一个可以直接用于制作的专业级剧本大纲。`;
+
+      // Log the complete prompt for debugging
+      console.log('📝 COMPLETE AI PROMPT:');
+      console.log('='.repeat(80));
+      console.log(prompt);
+      console.log('='.repeat(80));
+      console.log('📊 STRUCTURED DATA:');
+      console.log('Project Data:', projectData);
+      console.log('Form Data JSON:', formData.projectDataJson);
 
       // Call AI service with the selected provider
       console.log(`🤖 Calling ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} API...`);
@@ -186,10 +228,27 @@ const prompt = `${formData.appDescription}`;
     setIsChatProcessing(true);
 
     try {
-      // Create enhanced prompt with context using current editor content
+      // Parse the structured project data for context
+      const projectData = parseProjectData(formData.projectDataJson);
+      
+      if (!projectData) {
+        throw new Error('Invalid project data format');
+      }
+
+      // Create enhanced prompt with context using current editor content and structured data
       const chatPrompt = `You are helping to refine a script outline. Here is the context:
 
-ORIGINAL REQUEST: "${formData.appDescription}"
+ORIGINAL PROJECT DATA:
+故事梗概: "${projectData.storySynopsis}"
+
+人物要素:
+${projectData.characters.map((char, i) => `人物 ${i + 1}: ${char.identity} (欲望: ${char.desire}, 动作: ${char.action})`).join('\n')}
+
+事件要素:
+${projectData.events.map((event, i) => `事件 ${i + 1}: ${event.coreProblem} → ${event.result}`).join('\n')}
+
+主题思想:
+${projectData.themes.map((theme, i) => `主题 ${i + 1}: ${theme.positiveValue} vs ${theme.negativeValue}`).join('\n')}
 
 CURRENT OUTLINE:
 ${currentOutlineContent}
@@ -202,8 +261,7 @@ USER'S NEW REQUEST: "${userMessage}"
 IMPORTANT: You MUST respond with ONLY valid JSON in this exact format (no extra text, no markdown formatting):
 
 {
-  "chatReply": "Your conversational response to the user, if user looks like he wants to make a change to the outline even though the
-  user did not explict mentioned the outline, you should always update the outline",
+  "chatReply": "Your conversational response to the user, if user looks like he wants to make a change to the outline even though the user did not explict mentioned the outline, you should always update the outline",
   "outlineUpdate": "The complete updated outline text in markdown format, or null if no changes needed",
   "updateReason": "Brief explanation of what was changed or why no changes were made"
 }
@@ -215,7 +273,14 @@ CRITICAL RULES:
 4. DO NOT provide brief descriptions - provide the actual complete outline content
 5. Maintain professional script formatting and structure
 6. Use null (not "null") for outlineUpdate if no changes are needed
-7. Keep the outline in markdown format with proper headers and structure`;
+7. Keep the outline in markdown format with proper headers and structure
+8. Ensure consistency with the original project elements (characters, events, themes)`;
+
+      // Log the complete chat prompt for debugging
+      console.log('💬 COMPLETE CHAT PROMPT:');
+      console.log('='.repeat(80));
+      console.log(chatPrompt);
+      console.log('='.repeat(80));
 
       console.log(`🤖 Processing chat message with ${formData.aiProvider}...`);
       const aiResponse = await callAI(chatPrompt, formData.apiKey, formData.aiProvider);
