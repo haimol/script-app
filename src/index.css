@@ -11,3 +11,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* You can add global styles to this file, and also import other style files */
+
+/* Fix for antd menu alignment */
+.side-menu .ant-menu-submenu-title {
+    margin: 4px 8px !important;
+    height: 44px;
+    width: calc(100% - 16px);
+    display: flex;
+    align-items: center;
+}

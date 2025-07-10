@@ -3,7 +3,11 @@
 .ant-layout-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1001;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  box-shadow: 0 2px 20px rgba(102, 126, 234, 0.2);
+  border-bottom: none;
+  height: 72px;
 }
 
 .ant-form-item-label > label {
@@ -27,15 +31,113 @@
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
-/* Fixed sidebar content margin */
+/* Enhanced sidebar content margin with smooth transitions */
 .main-content-with-sidebar {
-  margin-left: 200px;
-  transition: margin-left 0.2s;
+  margin-left: 220px;
+  transition: margin-left 0.3s ease;
+  padding-top: 0 !important;
 }
 
 /* Responsive adjustment for collapsed sidebar */
 @media (max-width: 1000px) {
   .main-content-with-sidebar {
-    margin-left: 80px;
+    margin-left: 64px;
+  }
+}
+
+/* Sidebar styling enhancements */
+.ant-layout-sider {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+  border-right: none !important;
+}
+
+.ant-menu-item {
+  border-radius: 12px !important;
+  margin: 4px 8px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-menu-item:hover {
+  background: rgba(102, 126, 234, 0.1) !important;
+  transform: translateX(2px);
+}
+
+.ant-menu-item-selected {
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%) !important;
+  border: 1px solid rgba(102, 126, 234, 0.2) !important;
+  color: #667eea !important;
+  font-weight: 600 !important;
+}
+
+.ant-menu-submenu-title {
+  border-radius: 10px !important;
+  margin: 2px 0 !important;
+  height: 40px !important;
+  transition: all 0.3s ease !important;
+}
+
+.ant-menu-submenu-title:hover {
+  background: rgba(102, 126, 234, 0.08) !important;
+}
+
+/* Header breadcrumb styling */
+.ant-breadcrumb {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.ant-breadcrumb a {
+  color: rgba(255, 255, 255, 0.8) !important;
+  transition: color 0.3s ease;
+}
+
+.ant-breadcrumb a:hover {
+  color: white !important;
+}
+
+.ant-breadcrumb-separator {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* Custom scrollbar for sidebar */
+.ant-layout-sider::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ant-layout-sider::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ant-layout-sider::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.3);
+  border-radius: 2px;
+}
+
+.ant-layout-sider::-webkit-scrollbar-thumb:hover {
+  background: rgba(102, 126, 234, 0.5);
+}
+
+/* Smooth page transitions */
+.ant-layout-content {
+  transition: all 0.3s ease;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .main-content-with-sidebar {
+    margin-left: 64px;
+    padding: 16px !important;
+  }
+  
+  .ant-layout-header {
+    padding: 0 16px !important;
   }
 } 
