@@ -465,6 +465,7 @@ Please create a full script with:
 3. Action lines
 4. Stage directions
 5. Professional formatting
+6. Please be complete and professional, for every scenary, describe them in paragraphs when possible, like a book, output around 5000 words in Chinese.
 
 Return the complete script in markdown format.`;
 

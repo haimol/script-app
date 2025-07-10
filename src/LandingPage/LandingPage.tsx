@@ -279,7 +279,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           initialValues={{
             aiProvider: "deepseek",
             apiKey: "sk-08fc30a4bed1498f94c48b34635347e6",
-            storySynopsis: "一个关于年轻程序员发现古老AI系统的科幻故事。在不久的将来，主角意外激活了一个被遗忘的人工智能，这个AI声称拥有预测未来的能力。随着故事的发展，主角必须在信任这个神秘AI和保护人类免受其潜在威胁之间做出选择。",
+            storySynopsis: projectData.storySynopsis, // Use context data like other sections
             ...initialValues // Merge with any provided initial values
           }}
           className="api-config-form"
