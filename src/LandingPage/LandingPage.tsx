@@ -222,12 +222,13 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             >
               Continue Editing Outline
             </Button>
-            <Button 
+            {/* DEMO: Manage Episodes button commented out for client demo */}
+            {/* <Button 
               size="large"
               onClick={() => navigate('/episodes')}
             >
               Manage Episodes
-            </Button>
+            </Button> */}
             <br />
             <Button 
               type="link" 

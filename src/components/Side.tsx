@@ -53,8 +53,9 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
             setCurrent('home');
         } else if (path === '/outline') {
             setCurrent('outline');
-        } else if (path === '/episodes') {
-            setCurrent('episodes');
+        // DEMO: Episodes route detection commented out for client demo
+        // } else if (path === '/episodes') {
+        //     setCurrent('episodes');
         } else {
             setCurrent('home');
         }
@@ -102,30 +103,31 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                     key: 'outline',
                     icon: <EditOutlined style={{ fontSize: 16, color: '#667eea' }} />,
                 },
-                {
-                    label: (
-                        <div style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'space-between',
-                            width: '100%'
-                        }}>
-                            <span style={{ fontWeight: 500 }}>Episode Manager</span>
-                            {hasValidOutlineData() && (
-                                <Badge 
-                                    size="small" 
-                                    count="●" 
-                                    style={{ 
-                                        backgroundColor: '#10b981',
-                                        boxShadow: '0 0 0 2px #d1fae5'
-                                    }} 
-                                />
-                            )}
-                        </div>
-                    ),
-                    key: 'episodes',
-                    icon: <FileTextOutlined style={{ fontSize: 16, color: '#10b981' }} />,
-                }
+                // DEMO: Episode Manager commented out for client demo
+                // {
+                //     label: (
+                //         <div style={{ 
+                //             display: 'flex', 
+                //             alignItems: 'center', 
+                //             justifyContent: 'space-between',
+                //             width: '100%'
+                //         }}>
+                //             <span style={{ fontWeight: 500 }}>Episode Manager</span>
+                //             {hasValidOutlineData() && (
+                //                 <Badge 
+                //                     size="small" 
+                //                     count="●" 
+                //                     style={{ 
+                //                         backgroundColor: '#10b981',
+                //                         boxShadow: '0 0 0 2px #d1fae5'
+                //                     }} 
+                //                 />
+                //             )}
+                //         </div>
+                //     ),
+                //     key: 'episodes',
+                //     icon: <FileTextOutlined style={{ fontSize: 16, color: '#10b981' }} />,
+                // }
             ]
         },
         {
@@ -155,9 +157,10 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
             case 'outline':
                 navigate('/outline');
                 break;
-            case 'episodes':
-                navigate('/episodes');
-                break;
+            // DEMO: Episodes navigation commented out for client demo
+            // case 'episodes':
+            //     navigate('/episodes');
+            //     break;
             case 'settings':
                 // TODO: Navigate to settings page when created
                 console.log('Settings page - coming soon!');

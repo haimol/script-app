@@ -63,12 +63,13 @@ const MainFramework: React.FC = () => {
           subtitle: 'Generate and refine your script outline',
           icon: <EditOutlined />
         };
-      case '/episodes':
-        return {
-          title: 'Episode Manager',
-          subtitle: 'Break down your outline into episodes',
-          icon: <FileTextOutlined />
-        };
+      // DEMO: Episodes route commented out for client demo
+      // case '/episodes':
+      //   return {
+      //     title: 'Episode Manager',
+      //     subtitle: 'Break down your outline into episodes',
+      //     icon: <FileTextOutlined />
+      //   };
       default:
         return {
           title: 'Script Writer',
@@ -285,7 +286,8 @@ const MainFramework: React.FC = () => {
               />
             } />
             <Route path="/outline" element={<OutlinePage />} />
-            <Route path="/episodes" element={<EpisodePage />} />
+            {/* DEMO: Episodes route commented out for client demo */}
+            {/* <Route path="/episodes" element={<EpisodePage />} /> */}
           </Routes>
         </Content>
       </Layout>

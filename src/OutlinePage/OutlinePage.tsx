@@ -837,7 +837,8 @@ CRITICAL RULES:
                   >
                     🗑️ Clear
                   </Button>
-                  <Button 
+                  {/* DEMO: Create Episodes button commented out for client demo */}
+                  {/* <Button 
                     size="small"
                     type="primary"
                     onClick={proceedToEpisodes}
@@ -854,7 +855,7 @@ CRITICAL RULES:
                     }}
                   >
                     🎬 Create Episodes
-                  </Button>
+                  </Button> */}
                   <div style={{ 
                     fontSize: 12, 
                     color: '#9ca3af', 
