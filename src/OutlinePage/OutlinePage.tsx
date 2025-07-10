@@ -472,7 +472,7 @@ CRITICAL RULES:
             isGenerating 
               ? `Using ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI to craft your script outline...`
               : initialGenerationComplete
-                ? `Generated with ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI • Start chatting to refine your outline`
+                ? `Generated with ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI • Your outline is ready for editing`
                 : "Setting up your creative workspace..."
           }
           type={isGenerating ? "info" : initialGenerationComplete ? "success" : "info"}
@@ -518,10 +518,10 @@ CRITICAL RULES:
         background: 'rgba(0, 0, 0, 0.06)'
       }}>
         {!initialGenerationComplete ? (
-          // Initial loading state - show layout preview
+          // DEMO: Initial loading state - single panel preview (chat disabled)
           <>
-            {/* Left Panel - Chat Preview (Disabled) */}
-            <div style={{ 
+            {/* DEMO: Chat Preview commented out for client demo */}
+            {/* <div style={{ 
               width: '40%', 
               display: 'flex',
               flexDirection: 'column',
@@ -579,9 +579,9 @@ CRITICAL RULES:
               }}>
                 <Skeleton.Input active style={{ width: '100%', borderRadius: '12px' }} />
               </div>
-            </div>
+            </div> */}
 
-            {/* Right Panel - Outline Loading */}
+            {/* Single Panel - Outline Loading (full width for demo) */}
             <div style={{ 
               flex: 1, 
               display: 'flex', 
@@ -590,8 +590,8 @@ CRITICAL RULES:
               maxHeight: '100%',
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '0 16px 16px 0',
-              margin: '16px 16px 16px 0',
+              borderRadius: '16px',
+              margin: '16px',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
               overflow: 'hidden'
             }}>
@@ -650,10 +650,10 @@ CRITICAL RULES:
             </div>
           </>
         ) : (
-          // Two-panel layout after initial generation
+          // DEMO: Single-panel layout for demo (chat disabled)
           <>
-            {/* Left Panel - Chat */}
-            <div style={{ 
+            {/* DEMO: Chat Panel commented out for client demo */}
+            {/* <div style={{ 
               width: '40%', 
               display: 'flex',
               flexDirection: 'column',
@@ -671,9 +671,9 @@ CRITICAL RULES:
                 onSendMessage={handleChatMessage}
                 disabled={!formData.apiKey}
               />
-            </div>
+            </div> */}
 
-            {/* Right Panel - Outline Editor */}
+            {/* Single Panel - Outline Editor (full width for demo) */}
             <div style={{ 
               flex: 1, 
               display: 'flex', 
@@ -681,8 +681,8 @@ CRITICAL RULES:
               minHeight: 0,
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '0 16px 16px 0',
-              margin: '16px 16px 16px 0',
+              borderRadius: '16px',
+              margin: '16px',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
               overflow: 'hidden'
             }}>
