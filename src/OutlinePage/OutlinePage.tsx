@@ -128,48 +128,78 @@ const OutlinePage: React.FC = () => {
         throw new Error('Invalid project data format');
       }
 
-      // Create comprehensive prompt using structured data
-      const prompt = `请根据以下结构化信息创建详细的专业剧本大纲:
+      // Create comprehensive prompt using PO's design with JSON data integration
+      const prompt = `请你担任剧本结构顾问，协助我根据以下资料生成剧本的幕与梗概。
 
-故事梗概:
-${projectData.storySynopsis}
+我已经填写完成以下内容：
 
-人物要素:
+**人物确立表：**包含主要角色的身份、欲望、动作等要素。
 ${projectData.characters.map((char, i) => `
 人物 ${i + 1}:
 • 身份: ${char.identity}
 • 欲望: ${char.desire}
 • 动作: ${char.action}
-• 设计思路: ${char.designConcept}
+• 设计思路: ${char.designConcept || '待补充'}
 `).join('')}
 
-事件要素:
+**事件确立表：**列出核心问题、主要障碍、结果等要素。
 ${projectData.events.map((event, i) => `
 事件 ${i + 1}:
 • 核心问题: ${event.coreProblem}
 • 主要障碍: ${event.mainObstacle}
 • 结果: ${event.result}
-• 设计思路: ${event.designConcept}
+• 设计思路: ${event.designConcept || '待补充'}
 `).join('')}
 
-主题思想:
+**主题确立表：**明确本剧的主题思想、正价值、负价值。
 ${projectData.themes.map((theme, i) => `
 主题 ${i + 1}:
 • 正价值: ${theme.positiveValue}
 • 负价值: ${theme.negativeValue}
-• 设计思路: ${theme.designConcept}
+• 设计思路: ${theme.designConcept || '待补充'}
 `).join('')}
 
-CRITICAL RULES:
-1. 返回完整的专业剧本大纲，使用Markdown格式
-2. 包含详细的场景、角色发展、对话要点和情节发展
-3. 不要提供简单摘要 - 提供实际完整的大纲内容
-4. 保持专业的剧本格式和结构
-5. 确保所有人物、事件和主题要素都被有机地融入到大纲中
-6. 使用清晰的章节分组和场景描述
-7. 包含具体的对话示例和视觉描述
+**故事要素表：**统整故事三支柱（人物、事件、主题）与故事八要素（身份、欲望、动作、核心问题、主要障碍、结果、正价值、负价值）。
 
-请创建一个可以直接用于制作的专业级剧本大纲。`;
+**故事梗概：**描述主线剧情、核心冲突与人物关系的文本。
+${projectData.storySynopsis}
+
+**任务目标：**
+请你根据以上内容，输出两份剧本结构图表，分别是「幕织体工作表」与「高潮大纲表」，并遵循以下结构说明：
+
+**第一张表：幕织体工作表（用于建立剧本结构脉络）**
+这是一个二维矩阵表格：
+
+横轴表示剧情的发展阶段，依序为：
+第一幕 → 激励事件 → 第二幕上 → 转折事件 → 第二幕下 → 危机事件 → 第三幕
+
+纵轴表示剧作构成要素，依序为：
+身份、欲望、动作、问题、阻障、结果、意义
+
+请你在每一个「阶段 × 要素」的交叉位置，填写1～2句话，说明：
+• 此阶段角色的状态（例如身份变化）
+• 当前的欲望或动机
+• 所采取的关键行动
+• 正在面对的核心问题
+• 遭遇的外在阻碍
+• 阶段性的事件结果
+• 与主题相关的意义或思辨内容
+
+**第二张表：高潮大纲表（用于列出高潮事件）**
+这是一张多行表格，每一行是一个角色在高潮阶段的行为与反应。表格结构为：
+
+列字段（横轴）依序为：
+人物、原因（角色为何出现此行动）、动作（具体行动）、内容（行动描述）、反应（他人或观众的回应）
+
+请至少列出5个主要角色在高潮事件中的行为与冲突反应，参考的高潮内容可基于"危机事件"或"第三幕"发展得出。
+
+每一列应当明确角色意图、所作行为、戏剧张力与反应结果（如情绪转变、观众激昂、角色顿悟等）。
+
+**注意事项**
+• 所有输出必须结构清楚、语义一致；
+• 幕织体表必须展现出角色弧线、冲突升级与主题深化；
+• 如果任何输入资料缺失，请以合理方式补足，保持故事连贯性；
+• 请不要输出完整剧本，仅输出结构表格内容，内容需要详尽并遵守故事要素表和故事梗概。`;
 
       // Log the complete prompt for debugging
       console.log('📝 COMPLETE AI PROMPT:');

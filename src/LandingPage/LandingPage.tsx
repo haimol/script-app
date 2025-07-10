@@ -328,17 +328,17 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             }}
             title={<span style={{ fontSize: 16, fontWeight: 600, color: '#fa8c16' }}>故事梗概 (Story Synopsis)</span>}
           >
-            <Form.Item 
+          <Form.Item 
               name="storySynopsis"
-              rules={[
+            rules={[
                 { required: true, message: '请输入故事梗概' }
-              ]}
+            ]}
               style={{ marginBottom: 0 }}
-            >
-              <TextArea 
+          >
+            <TextArea 
                 rows={5}
                 placeholder="请详细描述您的故事：包括背景设定、主要情节、核心冲突、目标受众等信息..."
-                showCount
+              showCount
                 maxLength={1000}
                 style={{ borderRadius: 8, fontSize: 14 }}
               />
@@ -620,8 +620,8 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
                             value={event.designConcept}
                             onChange={(e) => updateEvent(event.id, 'designConcept', e.target.value)}
                             style={{ borderRadius: 8 }}
-                          />
-                        </Form.Item>
+            />
+          </Form.Item>
                       </div>
                     </Card>
                   ))}
@@ -675,7 +675,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
                 border: '1px solid rgba(0, 0, 0, 0.06)'
               }}>
                 快捷键: ⌘+Enter (Mac) / Ctrl+Enter (Windows)
-              </Text>
+            </Text>
             </div>
           </Form.Item>
         </Form>
