@@ -64,7 +64,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
     // Menu items configuration with a static structure
     const items: MenuProps['items'] = [
         {
-            label: 'Home',
+            label: '首页',
             key: 'home',
             icon: <HomeOutlined style={{ fontSize: 16, verticalAlign: 'middle', lineHeight: 1 }} />,
         },
@@ -76,7 +76,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
             }
         },
         {
-            label: 'Script Tools',
+            label: '剧本工具',
             key: 'tools',
             icon: <RocketOutlined style={{ fontSize: 16, verticalAlign: 'middle', lineHeight: 1 }} />,
             children: [
@@ -88,7 +88,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                             justifyContent: 'space-between',
                             width: '100%'
                         }}>
-                            <span style={{ fontWeight: 500 }}>Outline Editor</span>
+                            <span style={{ fontWeight: 500 }}>大纲编辑器</span>
                             {hasValidOutlineData() && (
                                 <CheckCircleOutlined style={{ 
                                     color: '#10b981', 
@@ -112,7 +112,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                 //             justifyContent: 'space-between',
                 //             width: '100%'
                 //         }}>
-                //             <span style={{ fontWeight: 500 }}>Episode Manager</span>
+                //             <span style={{ fontWeight: 500 }}>剧集管理器</span>
                 //             {hasValidOutlineData() && (
                 //                 <Badge 
                 //                     size="small" 
@@ -138,7 +138,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
             }
         },
         {
-            label: 'Settings',
+            label: '设置',
             key: 'settings',
             icon: <SettingOutlined style={{ fontSize: 16, color: '#6b7280' }} />,
         }
@@ -163,7 +163,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
             //     break;
             case 'settings':
                 // TODO: Navigate to settings page when created
-                console.log('Settings page - coming soon!');
+                console.log('设置页面 - 即将推出!');
                 break;
             default:
                 // Do nothing for the 'tools' key, it's a submenu
@@ -268,7 +268,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                             backgroundClip: 'text',
                             marginBottom: '4px'
                         }}>
-                            Script Writer
+                            剧本编写器
                         </div>
                         <div style={{
                             fontSize: '11px',
@@ -276,7 +276,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                             fontWeight: 500,
                             letterSpacing: '0.5px'
                         }}>
-                            AI-Powered Studio
+                            AI智能工作室
                         </div>
                     </div>
                 ) : (
@@ -337,14 +337,14 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                         color: '#4a5568',
                         marginBottom: '4px'
                     }}>
-                        Script Writer v1.0
+                        剧本编写器 v1.0
                     </div>
                     <div style={{ 
                         fontSize: '11px',
                         color: '#6b7280',
                         letterSpacing: '0.3px'
                     }}>
-                        Tsinghua University
+                        清华大学
                     </div>
 
                 </div>

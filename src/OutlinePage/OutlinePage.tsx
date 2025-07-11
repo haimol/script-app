@@ -520,8 +520,8 @@ CRITICAL RULES:
         {!initialGenerationComplete ? (
           // Initial loading state - show layout preview
           <>
-            {/* Left Panel - Chat Preview (Disabled) */}
-            <div style={{ 
+            {/* DEMO: Chat Preview hidden for demo */}
+            {/* <div style={{ 
               width: '40%', 
               display: 'flex',
               flexDirection: 'column',
@@ -579,9 +579,9 @@ CRITICAL RULES:
               }}>
                 <Skeleton.Input active style={{ width: '100%', borderRadius: '12px' }} />
               </div>
-            </div>
+            </div> */}
 
-            {/* Right Panel - Outline Loading */}
+            {/* Outline Loading - Full Width (chat hidden for demo) */}
             <div style={{ 
               flex: 1, 
               display: 'flex', 
@@ -590,8 +590,8 @@ CRITICAL RULES:
               maxHeight: '100%',
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '0 16px 16px 0',
-              margin: '16px 16px 16px 0',
+              borderRadius: '16px',
+              margin: '16px',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
               overflow: 'hidden'
             }}>
@@ -652,8 +652,8 @@ CRITICAL RULES:
         ) : (
           // Two-panel layout after initial generation
           <>
-            {/* Left Panel - Chat */}
-            <div style={{ 
+            {/* DEMO: Chat Panel hidden for demo - all functions preserved */}
+            {/* <div style={{ 
               width: '40%', 
               display: 'flex',
               flexDirection: 'column',
@@ -671,9 +671,9 @@ CRITICAL RULES:
                 onSendMessage={handleChatMessage}
                 disabled={!formData.apiKey}
               />
-            </div>
+            </div> */}
 
-            {/* Right Panel - Outline Editor */}
+            {/* Outline Editor - Full Width (chat hidden for demo) */}
             <div style={{ 
               flex: 1, 
               display: 'flex', 
@@ -681,8 +681,8 @@ CRITICAL RULES:
               minHeight: 0,
               background: 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              borderRadius: '0 16px 16px 0',
-              margin: '16px 16px 16px 0',
+              borderRadius: '16px',
+              margin: '16px',
               boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
               overflow: 'hidden'
             }}>
@@ -702,64 +702,70 @@ CRITICAL RULES:
                     border: '1px solid rgba(0, 0, 0, 0.06)',
                     minHeight: '100%'
                   }}>
-                    <MDXEditor
-                      ref={editorRef}
-                      key={`mdx-editor-${editorKey}`}
-                      markdown={outlineText}
-                      onChange={(value: string) => setOutlineText(value)}
-                      suppressHtmlProcessing={true}
-                      plugins={[
-                        headingsPlugin(),
-                        listsPlugin(),
-                        quotePlugin(),
-                        thematicBreakPlugin(),
-                        markdownShortcutPlugin(),
-                        linkPlugin(),
-                        tablePlugin(),
-                        codeBlockPlugin({
-                          defaultCodeBlockLanguage: ''
-                        }),
-                        codeMirrorPlugin({
-                          codeBlockLanguages: {
-                            js: 'JavaScript',
-                            ts: 'TypeScript',
-                            jsx: 'JavaScript (React)',
-                            tsx: 'TypeScript (React)',
-                            html: 'HTML',
-                            css: 'CSS',
-                            json: 'JSON',
-                            markdown: 'Markdown',
-                            bash: 'Bash',
-                            python: 'Python',
-                            '': 'Plain Text'
+                    {/* Error boundary wrapper for MDXEditor */}
+                    <div key={`editor-wrapper-${editorKey}`}>
+                      <MDXEditor
+                        ref={editorRef}
+                        key={`mdx-editor-${editorKey}`}
+                        markdown={outlineText}
+                        onChange={(value: string) => {
+                          try {
+                            setOutlineText(value);
+                          } catch (error) {
+                            console.warn('MDXEditor onChange error:', error);
+                            // Fallback to prevent crashes
+                            setEditorKey(prev => prev + 1);
                           }
-                        }),
-                        diffSourcePlugin({
-                          viewMode: 'rich-text',
-                          diffMarkdown: ''
-                        }),
-                        toolbarPlugin({
-                          toolbarContents: () => (
-                            <>
-                              {/* <UndoRedo /> */}
-                              {/* <Separator /> */}
-                              <BoldItalicUnderlineToggles />
-                              <CodeToggle />
-                              <Separator />
-                              <BlockTypeSelect />
-                              <Separator />
-                              <ListsToggle />
-                              <Separator />
-                              <CreateLink />
-                              <InsertTable />
-                              <Separator />
-                              <InsertCodeBlock />
-                              <InsertThematicBreak />
-                            </>
-                          )
-                        })
-                      ]}
-                    />
+                        }}
+                        suppressHtmlProcessing={true}
+                        contentEditableClassName="mdx-editor-content"
+                        plugins={[
+                          headingsPlugin(),
+                          listsPlugin(),
+                          quotePlugin(),
+                          thematicBreakPlugin(),
+                          markdownShortcutPlugin(),
+                          linkPlugin(),
+                          tablePlugin(),
+                          codeBlockPlugin({
+                            defaultCodeBlockLanguage: ''
+                          }),
+                          codeMirrorPlugin({
+                            codeBlockLanguages: {
+                              js: 'JavaScript',
+                              ts: 'TypeScript',
+                              jsx: 'JavaScript (React)',
+                              tsx: 'TypeScript (React)',
+                              html: 'HTML',
+                              css: 'CSS',
+                              json: 'JSON',
+                              markdown: 'Markdown',
+                              bash: 'Bash',
+                              python: 'Python',
+                              '': 'Plain Text'
+                            }
+                          }),
+                          toolbarPlugin({
+                            toolbarContents: () => (
+                              <>
+                                <BoldItalicUnderlineToggles />
+                                <CodeToggle />
+                                <Separator />
+                                <BlockTypeSelect />
+                                <Separator />
+                                <ListsToggle />
+                                <Separator />
+                                <CreateLink />
+                                <InsertTable />
+                                <Separator />
+                                <InsertCodeBlock />
+                                <InsertThematicBreak />
+                              </>
+                            )
+                          })
+                        ]}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <div style={{ 

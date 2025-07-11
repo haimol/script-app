@@ -22,3 +22,37 @@ code {
     display: flex;
     align-items: center;
 }
+
+/* MDXEditor table fixes to prevent DOM conflicts */
+.mdx-editor-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+
+.mdx-editor-content table td,
+.mdx-editor-content table th {
+    border: 1px solid #e5e7eb;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.mdx-editor-content table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+}
+
+/* Prevent table manipulation conflicts */
+.mdx-editor-content [data-lexical-editor] {
+    min-height: 20px;
+}
+
+/* Fix table cell selection issues */
+.mdx-editor-content table .selected {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Ensure table buttons work properly */
+.mdx-editor [role="toolbar"] button {
+    pointer-events: auto;
+}
