@@ -266,9 +266,9 @@ ${projectData.storySynopsis}
       }
 
       // Create enhanced prompt with context using current editor content and structured data
-      const chatPrompt = `You are helping to refine a script outline. Here is the context:
+      const chatPrompt = `你正在帮助优化剧本大纲。以下是相关背景信息：
 
-ORIGINAL PROJECT DATA:
+原始项目数据:
 故事梗概: "${projectData.storySynopsis}"
 
 人物要素:
@@ -280,31 +280,31 @@ ${projectData.events.map((event, i) => `事件 ${i + 1}: ${event.coreProblem} �
 主题思想:
 ${projectData.themes.map((theme, i) => `主题 ${i + 1}: ${theme.positiveValue} vs ${theme.negativeValue}`).join('\n')}
 
-CURRENT OUTLINE:
+当前大纲内容:
 ${currentOutlineContent}
 
-CHAT HISTORY:
+聊天历史:
 ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 
-USER'S NEW REQUEST: "${userMessage}"
+用户的新请求: "${userMessage}"
 
-IMPORTANT: You MUST respond with ONLY valid JSON in this exact format (no extra text, no markdown formatting):
+重要说明: 你必须仅以下面的JSON格式回复（不要添加任何额外文本，不要使用markdown格式）：
 
 {
-  "chatReply": "Your conversational response to the user, if user looks like he wants to make a change to the outline even though the user did not explict mentioned the outline, you should always update the outline",
-  "outlineUpdate": "The complete updated outline text in markdown format, or null if no changes needed",
-  "updateReason": "Brief explanation of what was changed or why no changes were made"
+  "chatReply": "你对用户的对话回复，如果用户看起来想要修改大纲（即使用户没有明确提到大纲），你也应该始终更新大纲",
+  "outlineUpdate": "完整更新后的大纲文本（markdown格式），如果不需要修改则为null",
+  "updateReason": "简要说明修改了什么或为什么不需要修改"
 }
 
-CRITICAL RULES:
-1. Return ONLY the JSON object, nothing else
-2. For outlineUpdate: Provide the COMPLETE FULL outline, not just a summary of changes
-3. Include detailed scenes, character development, dialogue, and plot points
-4. DO NOT provide brief descriptions - provide the actual complete outline content
-5. Maintain professional script formatting and structure
-6. Use null (not "null") for outlineUpdate if no changes are needed
-7. Keep the outline in markdown format with proper headers and structure
-8. Ensure consistency with the original project elements (characters, events, themes)`;
+关键规则:
+1. 仅返回JSON对象，不要有其他内容
+2. 对于outlineUpdate: 提供完整的大纲内容，不是修改摘要
+3. 包含详细的场景、角色发展、对话和情节要点
+4. 不要提供简要描述 - 要提供实际完整的大纲内容
+5. 保持专业的剧本格式和结构
+6. 如果不需要修改，使用null（不是"null"）
+7. 保持大纲为markdown格式，使用适当的标题和结构
+8. 确保与原始项目要素（人物、事件、主题）保持一致`;
 
       // Log the complete chat prompt for debugging
       console.log('💬 COMPLETE CHAT PROMPT:');
