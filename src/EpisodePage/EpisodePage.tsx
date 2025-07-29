@@ -53,7 +53,7 @@ const EpisodePage: React.FC = () => {
   // Get data from context or location state (for backward compatibility)
   const formData = outlineData.formData || (location.state?.formData as FormData);
   const outlineText = outlineData.outlineText || (location.state?.outlineText as string);
-  const episodeCount = location.state?.episodeCount as number || 3;
+  const episodeCount = location.state?.episodeCount as number || 4;
   
   // Episode management state
   const [episodes, setEpisodes] = useState<EpisodeData[]>([]);

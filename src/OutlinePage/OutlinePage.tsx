@@ -57,7 +57,7 @@ const OutlinePage: React.FC = () => {
 
   // Local state for editor key to force refresh
   const [editorKey, setEditorKey] = useState(0);
-  const [episodeCount, setEpisodeCount] = useState(3);
+  const [episodeCount, setEpisodeCount] = useState(4);
   const editorRef = useRef<MDXEditorMethods>(null);
 
   // If navigating with new form data, update context
