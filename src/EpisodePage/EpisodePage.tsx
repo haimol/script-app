@@ -3,7 +3,7 @@ import { Alert, Button, Skeleton, message, Select, Badge, Card, Typography, Tabs
 import { useLocation } from "react-router-dom";
 import OpenAI from "openai";
 import ChatPanel from "../components/ChatPanel";
-import { useOutlineContext, FormData, ChatMessage } from "../contexts/OutlineContext";
+import { useOutlineContext, FormData, ChatMessage, parseProjectData, ProjectData } from "../contexts/OutlineContext";
 import { 
   MDXEditor, 
   headingsPlugin, 
@@ -54,6 +54,16 @@ const EpisodePage: React.FC = () => {
   const formData = outlineData.formData || (location.state?.formData as FormData);
   const outlineText = outlineData.outlineText || (location.state?.outlineText as string);
   const episodeCount = location.state?.episodeCount as number || 4;
+  
+  // Parse project data to get narrative style
+  const projectData = formData ? parseProjectData(formData.projectDataJson) : null;
+  
+  // Narrative style mapping (same as OutlinePage)
+  const narrativeStyleMap = {
+    'linear': '直叙',
+    'flashback': '倒叙', 
+    'intercut': '插叙'
+  };
   
   // Episode management state
   const [episodes, setEpisodes] = useState<EpisodeData[]>([]);
@@ -121,10 +131,15 @@ const EpisodePage: React.FC = () => {
     try {
       const prompt = `Break down this script outline into detailed episodes. Each episode should have a clear title and detailed outline.
 
+STORY SYNOPSIS:
+${projectData?.storySynopsis || 'No synopsis provided'}
+
 ORIGINAL OUTLINE:
 ${outlineText}
 
 REQUIRED EPISODE COUNT: ${episodeCount}
+
+NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
 
 IMPORTANT: Return ONLY valid JSON in this exact format:
 
@@ -148,9 +163,11 @@ CRITICAL RULES:
 4. Include detailed scene descriptions, character development, dialogue, and plot points
 5. DO NOT provide brief summaries - provide actual complete episode content
 6. Each outline should be production-ready and detailed
-7. Use proper markdown formatting with headers and structure`;
+7. Use proper markdown formatting with headers and structure
+8. Follow the specified NARRATIVE STYLE (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) throughout all episodes`;
 
       console.log(`🤖 Calling ${formData.aiProvider} to generate episodes...`);
+      console.log(prompt);
       const aiResponse = await callAI(prompt, formData.apiKey, formData.aiProvider);
       
       let parsedResponse: any;
@@ -224,7 +241,12 @@ CRITICAL RULES:
         currentChatHistory = globalChatHistory;
         chatPrompt = `You are managing a multi-episode script project. Here is the context:
 
+STORY SYNOPSIS:
+${projectData?.storySynopsis || 'No synopsis provided'}
+
 ORIGINAL OUTLINE: "${outlineText}"
+
+NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
 
 ALL CURRENT EPISODES:
 ${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}
@@ -279,8 +301,13 @@ CRITICAL RULES:
 
         chatPrompt = `You are helping to refine a specific episode. Here is the context:
 
+STORY SYNOPSIS:
+${projectData?.storySynopsis || 'No synopsis provided'}
+
 FULL SERIES CONTEXT:
 ${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}`).join('\n')}
+
+NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
 
 CURRENT EPISODE: ${currentEpisode.title}
 CURRENT OUTLINE:
@@ -305,7 +332,8 @@ CRITICAL RULES:
 3. Include detailed scenes, character development, dialogue, and plot points
 4. DO NOT provide brief descriptions - provide the actual complete episode content
 5. Maintain continuity with the overall series
-6. Focus only on this specific episode`;
+6. Focus only on this specific episode
+7. Follow the specified NARRATIVE STYLE (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) for all content`;
       }
 
       console.log(`🤖 Processing ${chatContext} chat message...`);
@@ -455,12 +483,17 @@ CRITICAL RULES:
     try {
       const prompt = `Generate a complete, professional script for this episode based on the outline.
 
+STORY SYNOPSIS:
+${projectData?.storySynopsis || 'No synopsis provided'}
+
 EPISODE TITLE: ${episode.title}
 EPISODE OUTLINE:
 ${episode.outline}
 
 FULL SERIES CONTEXT:
 ${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}`).join('\n')}
+
+NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
 
 Please create a full script with:
 1. Proper scene headings
@@ -469,6 +502,7 @@ Please create a full script with:
 4. Stage directions
 5. Professional formatting
 6. Please be complete and professional, for every scenary, describe them in paragraphs when possible, like a book, output around 5000 words in Chinese.
+7. Follow the specified NARRATIVE STYLE (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) throughout the script.
 
 Return the complete script in markdown format.`;
 
