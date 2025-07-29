@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Skeleton, message } from "antd";
+import { Alert, Button, Skeleton, message, InputNumber, Tooltip } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
 import OpenAI from "openai";
 import ChatPanel from "../components/ChatPanel";
@@ -57,6 +57,7 @@ const OutlinePage: React.FC = () => {
 
   // Local state for editor key to force refresh
   const [editorKey, setEditorKey] = useState(0);
+  const [episodeCount, setEpisodeCount] = useState(3);
   const editorRef = useRef<MDXEditorMethods>(null);
 
   // If navigating with new form data, update context
@@ -426,7 +427,8 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
     navigate('/episodes', { 
       state: { 
         formData: formData,
-        outlineText: currentOutlineContent
+        outlineText: currentOutlineContent,
+        episodeCount: episodeCount
       } 
     });
   };
@@ -846,6 +848,36 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                   >
                     🗑️ Clear
                   </Button>
+                  
+                  {/* Episode Count Input */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ 
+                      fontSize: 12, 
+                      color: '#6b7280', 
+                      fontWeight: 500,
+                      whiteSpace: 'nowrap'
+                    }}>
+                      集数:
+                    </span>
+                    <Tooltip 
+                      title={episodeCount > 5 ? "建议生成1-5集以获得更好的AI输出质量" : ""}
+                      placement="top"
+                    >
+                      <InputNumber
+                        size="small"
+                        min={1}
+                        max={20}
+                        value={episodeCount}
+                        onChange={(value) => setEpisodeCount(value || 3)}
+                        style={{
+                          width: 60,
+                          borderRadius: '6px',
+                          border: episodeCount > 5 ? '1px solid #faad14' : '1px solid #d9d9d9'
+                        }}
+                      />
+                    </Tooltip>
+                  </div>
+                  
                   <Button 
                     size="small"
                     type="primary"

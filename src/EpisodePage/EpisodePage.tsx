@@ -53,6 +53,7 @@ const EpisodePage: React.FC = () => {
   // Get data from context or location state (for backward compatibility)
   const formData = outlineData.formData || (location.state?.formData as FormData);
   const outlineText = outlineData.outlineText || (location.state?.outlineText as string);
+  const episodeCount = location.state?.episodeCount as number || 3;
   
   // Episode management state
   const [episodes, setEpisodes] = useState<EpisodeData[]>([]);
@@ -123,6 +124,8 @@ const EpisodePage: React.FC = () => {
 ORIGINAL OUTLINE:
 ${outlineText}
 
+REQUIRED EPISODE COUNT: ${episodeCount}
+
 IMPORTANT: Return ONLY valid JSON in this exact format:
 
 {
@@ -140,7 +143,7 @@ IMPORTANT: Return ONLY valid JSON in this exact format:
 
 CRITICAL RULES:
 1. Return ONLY the JSON object, nothing else
-2. Create 3-6 episodes based on the content complexity
+2. Create EXACTLY ${episodeCount} episodes as requested
 3. Each episode outline should be COMPLETE FULL EPISODE OUTLINE in markdown format
 4. Include detailed scene descriptions, character development, dialogue, and plot points
 5. DO NOT provide brief summaries - provide actual complete episode content
@@ -501,7 +504,7 @@ Return the complete script in markdown format.`;
     if (formData && outlineText) {
       initializeEpisodes();
     }
-  }, [formData, outlineText]); // initializeEpisodes is defined inline and only depends on these props
+  }, [formData, outlineText, episodeCount]); // initializeEpisodes is defined inline and depends on these props
 
   // Handle case where user navigates directly without outline data
   if (!formData || !outlineText) {
