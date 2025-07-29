@@ -29,6 +29,8 @@ export interface ThemeElement {
 // Interface for the complete project data structure
 export interface ProjectData {
   storySynopsis: string; // 故事梗概
+  scriptRequirement: string; // 剧本要求
+  narrativeStyle: 'linear' | 'flashback' | 'intercut'; // 剧本陈述方式
   characters: CharacterElement[];
   events: EventElement[];
   themes: ThemeElement[];
@@ -59,6 +61,8 @@ export const stringifyProjectData = (data: ProjectData): string => {
 export const createEmptyProjectData = (): ProjectData => {
   return {
     storySynopsis: "这是一个历史传记片，主人翁查尔斯·莱托勒，一个经历过四次海难、两次世界大战的英雄故事。查尔斯·莱托勒幼年丧父丧母，父亲弃他而去。他孤苦伶仃，后来参加了水手班的学习，13岁出海。在英国和南非作战的时候，他作为海军战士到了澳大利亚。在海军的成长中，他意识到了自己的责任。泰坦尼克号出海的时候，他是这艘船上的二副。在泰坦尼克撞到冰山时，他提醒船长和大副，这是一个不同的海难，希望早做准备。但是，船长和大副都认为这是一艘不可沉没的船。在船即将沉没的时候，查尔斯·莱托勒用空手枪维护船上的秩序，下令妇女和儿童先上船。船沉没之后，他逃上了一艘救生艇，又指挥全艇的人保持平衡，最终得救。后来他离开泰坦尼克号之后，又回到英国从事各种事业的创业，但屡不得志。就和妻子结婚，回到了小镇上过平凡人的生活，并生了两个孩子。他的第二个孩子，二儿子，在二战爆发的第三天，作为一个空军战士战死在空中。查尔斯·莱托勒在敦刻尔克大撤退的时候，作为一个普通的船长，驾着自己家的小船参加了敦刻尔克大撤退。他带着他的儿子一起完成了不可能的任务。后来他的大儿子也参加了英国皇家部队，在二战即将结束的前一个月，他的大儿子也战死疆场。莱托勒最终孤老一生，在他临终去世的时候，又经历了1952年的伦敦毒雾事件，他是此事件中近4000名死亡者中的一员。英雄不死的故事到此戛然而止。我们这个片子希望以倒叙的方式来呈现英雄的一生。开头从查尔斯·莱托勒带着自己的孩子参加敦刻尔克大撤退，驶向法国方向。在平静的海面上，他内心波涛汹涌，闪回着他成长当中每一个难忘的瞬间。敦刻尔克大撤退完成之后，他毅然把自己的孩子送上了战场。片子的尾声是伦敦毒雾事件中，莱托勒在自己的家中忍受着剧烈的咳嗽，回想着自己的一生。然后他的妻子问他：'假如让你再次选择，你将会怎样？'",
+    scriptRequirement: "历史传记片，展现英雄人物的一生及其选择的代价",
+    narrativeStyle: 'flashback' as const,
     characters: [
       {
         id: 'char-lightoller',

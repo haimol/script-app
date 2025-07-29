@@ -173,14 +173,30 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
   // Sync form values with context data when projectData changes
   useEffect(() => {
     form.setFieldsValue({
-      storySynopsis: projectData.storySynopsis
+      storySynopsis: projectData.storySynopsis,
+      scriptRequirement: projectData.scriptRequirement,
+      narrativeStyle: projectData.narrativeStyle
     });
-  }, [form, projectData.storySynopsis]);
+  }, [form, projectData.storySynopsis, projectData.scriptRequirement, projectData.narrativeStyle]);
 
   // Handle form values change
   const handleValuesChange = (changedValues: any, allValues: any) => {
     if (changedValues.storySynopsis !== undefined) {
       updateStorySynopsis(changedValues.storySynopsis);
+    }
+    if (changedValues.scriptRequirement !== undefined) {
+      const updatedData = {
+        ...projectData,
+        scriptRequirement: changedValues.scriptRequirement
+      };
+      setDraftProjectData(updatedData);
+    }
+    if (changedValues.narrativeStyle !== undefined) {
+      const updatedData = {
+        ...projectData,
+        narrativeStyle: changedValues.narrativeStyle
+      };
+      setDraftProjectData(updatedData);
     }
   };
 
@@ -191,6 +207,8 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
     // Parse and process form data
     const finalProjectData: ProjectData = {
       storySynopsis: values.storySynopsis || '',
+      scriptRequirement: values.scriptRequirement || '',
+      narrativeStyle: values.narrativeStyle || 'linear',
       characters: projectData.characters,
       events: projectData.events,
       themes: projectData.themes
@@ -337,7 +355,9 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           initialValues={{
             aiProvider: "deepseek",
             apiKey: "sk-08fc30a4bed1498f94c48b34635347e6",
-            storySynopsis: projectData.storySynopsis, // Use context data like other sections
+            storySynopsis: projectData.storySynopsis,
+            scriptRequirement: projectData.scriptRequirement,
+            narrativeStyle: projectData.narrativeStyle,
             ...initialValues // Merge with any provided initial values
           }}
           className="api-config-form"
@@ -419,6 +439,99 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
                 height: '48px'
               }}
             />
+          </Form.Item>
+
+          {/* Script Requirement Field */}
+          <Form.Item 
+            label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>剧本要求</span>}
+            name="scriptRequirement"
+            rules={[
+              { required: true, message: '请输入剧本要求！' }
+            ]}
+            tooltip="一句话描述这个剧本类型"
+            style={{ marginBottom: 28 }}
+          >
+            <Input 
+              placeholder="例如：历史传记片，展现英雄人物的一生及其选择的代价"
+              size="large"
+              style={{
+                borderRadius: '12px',
+                border: '2px solid #e2e8f0',
+                fontSize: '15px',
+                height: '48px',
+                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+              }}
+            />
+          </Form.Item>
+
+          {/* Narrative Style Field */}
+          <Form.Item 
+            label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>剧本陈述方式</span>}
+            name="narrativeStyle"
+            rules={[
+              { required: true, message: '请选择陈述方式！' }
+            ]}
+            tooltip="选择故事的叙述方式"
+            style={{ marginBottom: 32 }}
+          >
+            <Radio.Group 
+              buttonStyle="solid" 
+              size="large"
+              style={{ 
+                display: 'flex', 
+                gap: '12px',
+                background: '#f8fafc',
+                padding: '8px',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0'
+              }}
+            >
+              <Radio.Button 
+                value="linear"
+                style={{
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 500,
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  flex: 1,
+                  justifyContent: 'center'
+                }}
+              >
+                直叙
+              </Radio.Button>
+              <Radio.Button 
+                value="flashback"
+                style={{
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 500,
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  flex: 1,
+                  justifyContent: 'center'
+                }}
+              >
+                倒叙
+              </Radio.Button>
+              <Radio.Button 
+                value="intercut"
+                style={{
+                  borderRadius: '8px',
+                  border: 'none',
+                  fontWeight: 500,
+                  height: '40px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  flex: 1,
+                  justifyContent: 'center'
+                }}
+              >
+                插叙
+              </Radio.Button>
+            </Radio.Group>
           </Form.Item>
 
           {/* Story Synopsis Field - Enhanced */}

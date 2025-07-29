@@ -129,7 +129,16 @@ const OutlinePage: React.FC = () => {
       }
 
       // Create comprehensive prompt using PO's design with JSON data integration
+      const narrativeStyleMap = {
+        'linear': '直叙',
+        'flashback': '倒叙', 
+        'intercut': '插叙'
+      };
+
       const prompt = `请你担任剧本结构顾问，协助我根据以下资料生成剧本的幕与梗概。
+
+**剧本要求：** ${projectData.scriptRequirement}
+**陈述方式：** ${narrativeStyleMap[projectData.narrativeStyle]}
 
 我已经填写完成以下内容：
 
@@ -165,7 +174,7 @@ ${projectData.themes.map((theme, i) => `
 ${projectData.storySynopsis}
 
 **任务目标：**
-请你根据以上内容，输出两份剧本结构图表，分别是「幕织体工作表」与「高潮大纲表」，并遵循以下结构说明：
+请你根据以上内容，采用${narrativeStyleMap[projectData.narrativeStyle]}的陈述方式，输出两份剧本结构图表，分别是「幕织体工作表」与「高潮大纲表」，并遵循以下结构说明：
 
 **第一张表：幕织体工作表（用于建立剧本结构脉络）**
 这是一个二维矩阵表格：
