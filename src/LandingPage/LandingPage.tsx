@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Card, Typography, Radio, Space } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
@@ -40,10 +40,22 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
 }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { setFormData, hasValidOutlineData, clearOutlineData } = useOutlineContext();
+  const { outlineData, setFormData, setDraftProjectData, hasValidOutlineData, clearOutlineData } = useOutlineContext();
 
-  // Initialize form with sample project data
-  const [projectData, setProjectData] = useState<ProjectData>(createEmptyProjectData());
+  // Get current draft data from context, or initialize with default data
+  const getCurrentProjectData = (): ProjectData => {
+    if (outlineData.draftProjectData) {
+      return outlineData.draftProjectData;
+    }
+    
+    // Initialize with default data if it doesn't exist
+    const defaultData = createEmptyProjectData();
+    setDraftProjectData(defaultData);
+    return defaultData;
+  };
+
+  // Use context data for persistence
+  const projectData = getCurrentProjectData();
 
   // Helper function to generate unique IDs
   const generateId = (prefix: string) => `${prefix}-${Date.now()}-${Math.random()}`;
@@ -57,26 +69,29 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       action: '',
       designConcept: ''
     };
-    setProjectData(prev => ({
-      ...prev,
-      characters: [...prev.characters, newCharacter]
-    }));
+    const updatedData = {
+      ...projectData,
+      characters: [...projectData.characters, newCharacter]
+    };
+    setDraftProjectData(updatedData);
   };
 
   const removeCharacter = (id: string) => {
-    setProjectData(prev => ({
-      ...prev,
-      characters: prev.characters.filter(char => char.id !== id)
-    }));
+    const updatedData = {
+      ...projectData,
+      characters: projectData.characters.filter(char => char.id !== id)
+    };
+    setDraftProjectData(updatedData);
   };
 
   const updateCharacter = (id: string, field: keyof CharacterElement, value: string) => {
-    setProjectData(prev => ({
-      ...prev,
-      characters: prev.characters.map(char => 
+    const updatedData = {
+      ...projectData,
+      characters: projectData.characters.map(char => 
         char.id === id ? { ...char, [field]: value } : char
       )
-    }));
+    };
+    setDraftProjectData(updatedData);
   };
 
   // Event management functions
@@ -88,26 +103,29 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       result: '',
       designConcept: ''
     };
-    setProjectData(prev => ({
-      ...prev,
-      events: [...prev.events, newEvent]
-    }));
+    const updatedData = {
+      ...projectData,
+      events: [...projectData.events, newEvent]
+    };
+    setDraftProjectData(updatedData);
   };
 
   const removeEvent = (id: string) => {
-    setProjectData(prev => ({
-      ...prev,
-      events: prev.events.filter(event => event.id !== id)
-    }));
+    const updatedData = {
+      ...projectData,
+      events: projectData.events.filter(event => event.id !== id)
+    };
+    setDraftProjectData(updatedData);
   };
 
   const updateEvent = (id: string, field: keyof EventElement, value: string) => {
-    setProjectData(prev => ({
-      ...prev,
-      events: prev.events.map(event => 
+    const updatedData = {
+      ...projectData,
+      events: projectData.events.map(event => 
         event.id === id ? { ...event, [field]: value } : event
       )
-    }));
+    };
+    setDraftProjectData(updatedData);
   };
 
   // Theme management functions
@@ -118,26 +136,52 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       negativeValue: '',
       designConcept: ''
     };
-    setProjectData(prev => ({
-      ...prev,
-      themes: [...prev.themes, newTheme]
-    }));
+    const updatedData = {
+      ...projectData,
+      themes: [...projectData.themes, newTheme]
+    };
+    setDraftProjectData(updatedData);
   };
 
   const removeTheme = (id: string) => {
-    setProjectData(prev => ({
-      ...prev,
-      themes: prev.themes.filter(theme => theme.id !== id)
-    }));
+    const updatedData = {
+      ...projectData,
+      themes: projectData.themes.filter(theme => theme.id !== id)
+    };
+    setDraftProjectData(updatedData);
   };
 
   const updateTheme = (id: string, field: keyof ThemeElement, value: string) => {
-    setProjectData(prev => ({
-      ...prev,
-      themes: prev.themes.map(theme => 
+    const updatedData = {
+      ...projectData,
+      themes: projectData.themes.map(theme => 
         theme.id === id ? { ...theme, [field]: value } : theme
       )
-    }));
+    };
+    setDraftProjectData(updatedData);
+  };
+
+  // Story synopsis update function
+  const updateStorySynopsis = (value: string) => {
+    const updatedData = {
+      ...projectData,
+      storySynopsis: value
+    };
+    setDraftProjectData(updatedData);
+  };
+
+  // Sync form values with context data when projectData changes
+  useEffect(() => {
+    form.setFieldsValue({
+      storySynopsis: projectData.storySynopsis
+    });
+  }, [form, projectData.storySynopsis]);
+
+  // Handle form values change
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    if (changedValues.storySynopsis !== undefined) {
+      updateStorySynopsis(changedValues.storySynopsis);
+    }
   };
 
   // Handle form submission
@@ -235,7 +279,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
               onClick={() => {
                 clearOutlineData();
                 form.resetFields();
-                setProjectData(createEmptyProjectData());
+                setDraftProjectData(createEmptyProjectData());
               }}
               style={{ marginTop: 8, color: '#ff4d4f' }}
             >
@@ -283,6 +327,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           form={form}
           layout="vertical"
           onFinish={handleFinish}
+          onValuesChange={handleValuesChange}
           onFinishFailed={(errorInfo) => {
             console.log('❌ Form validation failed:', errorInfo);
             console.log('❌ Error fields:', errorInfo.errorFields);
@@ -411,10 +456,10 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
               style={{ marginBottom: 0 }}
           >
             <TextArea 
-                rows={6}
+                rows={8}
                 placeholder="请详细描述您的故事：包括背景设定、主要情节、核心冲突、目标受众等信息..."
               showCount
-                maxLength={1000}
+                maxLength={2000}
                 style={{ 
                   borderRadius: 12, 
                   fontSize: 15,
@@ -506,7 +551,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
                           style={{ marginBottom: 0 }}
                         >
                           <Input 
-                            placeholder="例如：年轻程序员、古老的人工智能、政府特工..."
+                            placeholder="例如：英国海军军官、泰坦尼克号二副、民船船长..."
                             value={character.identity}
                             onChange={(e) => updateCharacter(character.id, 'identity', e.target.value)}
                             style={{ 
@@ -546,7 +591,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
                           >
                             <TextArea 
                               rows={2}
-                              placeholder="探索和激活古老的AI系统、操纵和诱导人类的决策..."
+                              placeholder="在危机时刻组织救援、维持秩序、坚守职业道德直至最后..."
                               value={character.action}
                               onChange={(e) => updateCharacter(character.id, 'action', e.target.value)}
                               style={{ 
