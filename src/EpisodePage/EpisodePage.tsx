@@ -161,7 +161,7 @@ const EpisodePage: React.FC = () => {
     },
     {
       "title": "第2集：{剧集标题}",
-      "outline": "Detailed episode 2 outline..."
+      "outline": "每个场次需注明场景类型、场景名称与时间，并简要描述场景氛围、环境要素及时代背景。接着列出出场人物，标明角色身份与性格特征。对白与动作部分需包含角色名称、情绪或动作、对白内容及相关动作描述。两个场次之间请用明确分隔（如“---”或标识“场次一”、“场次二”）。整体内容需体现每位角色在语言或动作上的个性表达与情绪变化。"
     }
   ]
 }
@@ -177,8 +177,7 @@ const EpisodePage: React.FC = () => {
 8. 在所有剧集中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})
 9. 每个剧集必须反映结构要素（身份、欲望、动作、问题、阻障、结果、意义）
 10. 角色动机和行动必须与剧情大纲表格结构（人物、原因、动作、内容、反应）保持一致
-11. 每个剧集应包含剧情大纲表格，显示角色动机、行动和后果
-12. 确保冲突和角色发展在剧集间的逻辑推进`;
+11. 确保冲突和角色发展在剧集间的逻辑推进`;
 
       console.log(`🤖 Calling ${formData.aiProvider} to generate episodes...`);
       console.log(prompt);
@@ -316,7 +315,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 
         chatPrompt = `你正在协助完善一个特定剧集。以下是相关背景信息：
 
-**故事梗概：** ${projectData?.storySynopsis || 'No synopsis provided'}
+**故事梗概：** ${projectData?.storySynopsis || '未提供故事梗概'}
 
 **结构大纲与剧情大纲：** ${outlineText}
 
@@ -497,30 +496,32 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
     ));
 
     try {
-      const prompt = `Generate a complete, professional script for this episode based on the outline.
+      const prompt = `基于以下大纲为这一集生成完整、专业的剧本。
 
-STORY SYNOPSIS:
-${projectData?.storySynopsis || 'No synopsis provided'}
+**故事梗概：** ${projectData?.storySynopsis || '未提供故事梗概'}
 
-EPISODE TITLE: ${episode.title}
-EPISODE OUTLINE:
+**结构大纲与剧情大纲：** ${outlineText}
+
+剧集标题：${episode.title}
+
+剧集大纲：
 ${episode.outline}
 
-FULL SERIES CONTEXT:
-${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}`).join('\n')}
+完整系列背景：
+${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
 
-NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
+叙述方式：${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
 
-Please create a full script with:
-1. Proper scene headings
-2. Character dialogue
-3. Action lines
-4. Stage directions
-5. Professional formatting
-6. Please be complete and professional, for every scenary, describe them in paragraphs when possible, like a book, output around 5000 words in Chinese.
-7. Follow the specified NARRATIVE STYLE (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) throughout the script.
+请创建一个完整的剧本，包含：
+1. 适当的场景标题
+2. 角色对话
+3. 动作描述
+4. 舞台指示
+5. 专业格式
+6. 请完整且专业，对于每个场景，尽可能用段落形式描述，像书籍一样，输出约5000字的中文内容。
+7. 在整个剧本中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})。
 
-Return the complete script in markdown format.`;
+请以markdown格式返回完整剧本。`;
 
       console.log(`🎬 Generating script for ${episode.title}...`);
       const scriptContent = await callAI(prompt, formData.apiKey, formData.aiProvider);
