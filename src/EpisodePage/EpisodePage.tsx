@@ -129,42 +129,56 @@ const EpisodePage: React.FC = () => {
     setIsInitializing(true);
     
     try {
-      const prompt = `Break down this script outline into detailed episodes. Each episode should have a clear title and detailed outline.
+      const prompt = `你是一位专业剧本创作者，擅长基于结构逻辑、人物动机与主题构建完整且富有戏剧张力的影视剧本。
+请根据以下资料，将剧本大纲分解为 ${episodeCount} 个详细的剧集：
 
-STORY SYNOPSIS:
-${projectData?.storySynopsis || 'No synopsis provided'}
+**故事梗概：** ${projectData?.storySynopsis || 'No synopsis provided'}
 
-ORIGINAL OUTLINE:
-${outlineText}
+**结构大纲与剧情大纲：** ${outlineText}
 
-REQUIRED EPISODE COUNT: ${episodeCount}
+**叙述方式：** ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}
 
-NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
+**剧集分配规则：**
+- 第1集：起 - 故事开端，人物介绍，背景设定
+- 第2集：承 - 激励事件 + 承段发展
+- 第3集：转 - 转折事件 + 转段冲突升级  
+- 第4集：合 - 危机事件 + 合段高潮与结局
 
-IMPORTANT: Return ONLY valid JSON in this exact format:
+**创作指导：**
+请结合结构大纲的七个要素（身份、欲望、动作、问题、阻障、结果、意义）和剧情大纲表格结构（人物、原因、动作、内容、反应）来创作每个剧集。确保：
+
+1. **人物动机清晰**：每个角色的参与动机、背景立场要明确
+2. **行动策略合理**：角色采取的行动策略要符合其身份和动机
+3. **行为展开具体**：具体行为要详细描述（如潜入、破坏、争辩、劝说等）
+4. **反应后果明确**：每个行为都要有相应的剧情后果、人物冲突或观众情绪反馈
+5. **冲突逐步升级**：确保情节逻辑连贯，冲突在剧集间逐步升级
 
 {
   "episodes": [
     {
-      "title": "Episode 1: The Beginning", 
-      "outline": "Detailed episode 1 outline with scenes, character development, and plot points..."
+      "title": "第1集：{剧集标题}", 
+      "outline": "每个场次需注明场景类型、场景名称与时间，并简要描述场景氛围、环境要素及时代背景。接着列出出场人物，标明角色身份与性格特征。对白与动作部分需包含角色名称、情绪或动作、对白内容及相关动作描述。两个场次之间请用明确分隔（如“---”或标识“场次一”、“场次二”）。整体内容需体现每位角色在语言或动作上的个性表达与情绪变化。"
     },
     {
-      "title": "Episode 2: The Conflict",
+      "title": "第2集：{剧集标题}",
       "outline": "Detailed episode 2 outline..."
     }
   ]
 }
 
-CRITICAL RULES:
-1. Return ONLY the JSON object, nothing else
-2. Create EXACTLY ${episodeCount} episodes as requested
-3. Each episode outline should be COMPLETE FULL EPISODE OUTLINE in markdown format
-4. Include detailed scene descriptions, character development, dialogue, and plot points
-5. DO NOT provide brief summaries - provide actual complete episode content
-6. Each outline should be production-ready and detailed
-7. Use proper markdown formatting with headers and structure
-8. Follow the specified NARRATIVE STYLE (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) throughout all episodes`;
+**重要规则：**
+1. 仅返回 JSON 对象，不要其他内容
+2. 严格按照要求创建 ${episodeCount} 个剧集
+3. 每个剧集大纲必须是完整的完整剧集大纲，使用 markdown 格式
+4. 包含详细的场景描述、角色发展、对话和情节要点
+5. 不要提供简要摘要 - 提供实际的完整剧集内容
+6. 每个大纲应该是制作就绪且详细的
+7. 使用适当的 markdown 格式和标题结构
+8. 在所有剧集中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})
+9. 每个剧集必须反映结构要素（身份、欲望、动作、问题、阻障、结果、意义）
+10. 角色动机和行动必须与剧情大纲表格结构（人物、原因、动作、内容、反应）保持一致
+11. 每个剧集应包含剧情大纲表格，显示角色动机、行动和后果
+12. 确保冲突和角色发展在剧集间的逻辑推进`;
 
       console.log(`🤖 Calling ${formData.aiProvider} to generate episodes...`);
       console.log(prompt);
@@ -239,55 +253,56 @@ CRITICAL RULES:
       if (chatContext === 'global') {
         // Global context - can affect all episodes
         currentChatHistory = globalChatHistory;
-        chatPrompt = `You are managing a multi-episode script project. Here is the context:
+        chatPrompt = `你正在管理一个多集剧本项目。以下是相关背景信息：
 
-STORY SYNOPSIS:
-${projectData?.storySynopsis || 'No synopsis provided'}
 
-ORIGINAL OUTLINE: "${outlineText}"
 
-NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
+**故事梗概：** ${projectData?.storySynopsis || 'No synopsis provided'}
 
-ALL CURRENT EPISODES:
-${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}
+**结构大纲与剧情大纲：** ${outlineText}
+
+叙述方式：${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
+
+所有当前剧集：
+${episodes.map((ep, i) => `第${i + 1}集：${ep.title}
 ${ep.outline}
 ---`).join('\n')}
 
-CHAT HISTORY:
+聊天历史：
 ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 
-USER'S REQUEST: "${userMessage}"
+用户请求：${userMessage}
 
-IMPORTANT: Return ONLY valid JSON in this exact format:
+重要：请仅返回以下格式的有效JSON：
 
 {
-  "chatReply": "Your conversational response to the user",
+  "chatReply": "你对用户的对话回复",
   "episodeUpdates": [
     {
       "id": "episode-1",
-      "title": "Updated title or null if no change",
-      "outline": "COMPLETE FULL EPISODE OUTLINE in markdown format, or null if no change"
+      "title": "更新的标题，如无变化则为null",
+      "outline": "完整的剧集大纲（markdown格式），如无变化则为null"
     }
   ],
   "newEpisodes": [
     {
-      "title": "New episode title",
-      "outline": "COMPLETE FULL EPISODE OUTLINE in markdown format"
+      "title": "新剧集标题",
+      "outline": "完整的剧集大纲（markdown格式）"
     }
   ],
-  "deletedEpisodeIds": ["episode-id-to-delete"],
-  "updateReason": "Brief explanation of changes made"
+  "deletedEpisodeIds": ["要删除的剧集id"],
+  "updateReason": "修改原因的简要说明"
 }
 
-CRITICAL RULES:
-1. For episodeUpdates: If an episode needs changes, provide the COMPLETE FULL episode outline, not just a summary of changes
-2. Each episode outline should be detailed with scenes, character development, dialogue, and plot points
-3. DO NOT provide brief descriptions - provide the actual complete episode content
-4. Only include episodeUpdates for episodes that actually changed
-5. Only include newEpisodes if new episodes should be added
-6. Only include deletedEpisodeIds if episodes should be removed
-7. Return empty arrays if no changes needed
-8. When updating episodes due to deletions, ensure continuity and completeness`;
+关键规则：
+1. 对于episodeUpdates：如果剧集需要修改，请提供完整的剧集大纲，而不是仅提供修改摘要
+2. 每个剧集大纲应包含详细的场景、角色发展、对话和情节要点
+3. 不要提供简要描述 - 要提供实际的完整剧集内容
+4. 仅包含实际发生变化的剧集的episodeUpdates
+5. 仅在有新剧集需要添加时包含newEpisodes
+6. 仅在需要删除剧集时包含deletedEpisodeIds
+7. 如无需更改则返回空数组
+8. 因删除而更新剧集时，确保连续性和完整性`;
 
       } else {
         // Episode-specific context
@@ -299,41 +314,42 @@ CRITICAL RULES:
         currentChatHistory = currentEpisode.chatHistory;
         const currentOutlineContent = editorRef.current?.getMarkdown() || currentEpisode.outline;
 
-        chatPrompt = `You are helping to refine a specific episode. Here is the context:
+        chatPrompt = `你正在协助完善一个特定剧集。以下是相关背景信息：
 
-STORY SYNOPSIS:
-${projectData?.storySynopsis || 'No synopsis provided'}
+**故事梗概：** ${projectData?.storySynopsis || 'No synopsis provided'}
 
-FULL SERIES CONTEXT:
-${episodes.map((ep, i) => `Episode ${i + 1}: ${ep.title}`).join('\n')}
+**结构大纲与剧情大纲：** ${outlineText}
 
-NARRATIVE STYLE: ${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
+完整系列背景：
+${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
 
-CURRENT EPISODE: ${currentEpisode.title}
-CURRENT OUTLINE:
+叙述方式：${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'} (${projectData?.narrativeStyle || 'linear'})
+
+当前剧集：${currentEpisode.title}
+当前大纲：
 ${currentOutlineContent}
 
-CHAT HISTORY:
+聊天历史：
 ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 
-USER'S REQUEST: "${userMessage}"
+用户请求："${userMessage}"
 
-IMPORTANT: Return ONLY valid JSON in this exact format:
+重要：请仅返回以下格式的有效JSON：
 
 {
-  "chatReply": "Your conversational response to the user",
-  "outlineUpdate": "The complete updated outline text in markdown format, or null if no changes needed",
-  "updateReason": "Brief explanation of what was changed"
+  "chatReply": "你对用户的对话回复",
+  "outlineUpdate": "完整的更新后大纲文本（markdown格式），如无变化则为null",
+  "updateReason": "修改原因的简要说明"
 }
 
-CRITICAL RULES:
-1. Return ONLY the JSON object, nothing else
-2. For outlineUpdate: Provide the COMPLETE FULL episode outline, not just a summary of changes
-3. Include detailed scenes, character development, dialogue, and plot points
-4. DO NOT provide brief descriptions - provide the actual complete episode content
-5. Maintain continuity with the overall series
-6. Focus only on this specific episode
-7. Follow the specified NARRATIVE STYLE (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) for all content`;
+关键规则：
+1. 仅返回JSON对象，不要其他内容
+2. 对于outlineUpdate：提供完整的完整剧集大纲，而不是仅提供修改摘要
+3. 包含详细的场景、角色发展、对话和情节要点
+4. 不要提供简要描述 - 提供实际的完整剧集内容
+5. 保持与整体系列的连续性
+6. 仅专注于这个特定剧集
+7. 遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) 用于所有内容`;
       }
 
       console.log(`🤖 Processing ${chatContext} chat message...`);
