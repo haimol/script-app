@@ -96,7 +96,7 @@ const EpisodePage: React.FC = () => {
           }
         : {
             baseURL: 'https://api.deepseek.com',
-            model: "deepseek-chat"
+            model: "deepseek-reasoner"
           };
 
       const openai = new OpenAI({
@@ -111,7 +111,7 @@ const EpisodePage: React.FC = () => {
           { role: "user", content: prompt }
         ],
         model: apiConfig.model,
-        max_tokens: 2000,
+        max_tokens: 64000,
         temperature: 0.7,
       });
 
@@ -518,10 +518,11 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
 3. 动作描述
 4. 舞台指示
 5. 专业格式
-6. 请完整且专业，对于每个场景，尽可能用段落形式描述，像书籍一样，输出约5000字的中文内容。
-7. 在整个剧本中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})。
+6. 请完整且专业地对每个场景进行段落式描述，尽量避免空格等无意义字符，像书籍一样
+7. 请输出约5000中文字符的内容
+8. 在整个剧本中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})。
 
-请以markdown格式返回完整剧本。`;
+请以纯文本格式返回完整剧本。`;
 
       console.log(`🎬 Generating script for ${episode.title}...`);
       const scriptContent = await callAI(prompt, formData.apiKey, formData.aiProvider);
