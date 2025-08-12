@@ -514,15 +514,16 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
 
 请创建一个完整的剧本，包含：
 1. 适当的场景标题
-2. 角色对话
-3. 动作描述
-4. 舞台指示
-5. 专业格式
-6. 请完整且专业地对每个场景进行段落式描述，尽量避免空格等无意义字符，像书籍一样
-7. 请输出约5000中文字符的内容
-8. 在整个剧本中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})。
+2. 主要角色（包含角色名称、角色描述）
+3. 故事梗概
+4. 正文（包含场景、角色对话、动作描述、舞台指示）
 
-请以纯文本格式返回完整剧本。`;
+注意事项：
+1. 请完整且专业地对每个场景进行描述，尽量避免空格等无意义字符
+2. 请输出约5000中文字符的内容
+3. 在整个剧本中遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'})。
+
+请以markdown格式返回完整剧本。`;
 
       console.log(`🎬 Generating script for ${episode.title}...`);
       const scriptContent = await callAI(prompt, formData.apiKey, formData.aiProvider);
