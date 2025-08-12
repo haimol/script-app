@@ -79,7 +79,7 @@ const OutlinePage: React.FC = () => {
           }
         : {
             baseURL: 'https://api.deepseek.com',
-            model: "deepseek-chat"
+            model: "deepseek-reasoner"
           };
 
       const openai = new OpenAI({
@@ -94,7 +94,7 @@ const OutlinePage: React.FC = () => {
           { role: "user", content: prompt }
         ],
         model: apiConfig.model,
-        max_tokens: 5000,
+        max_tokens: 64000,
         temperature: 0.7,
       });
 
