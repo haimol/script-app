@@ -371,9 +371,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           }}
           initialValues={{
             aiProvider: "deepseek",
-            apiKey: "sk-08fc30a4bed1498f94c48b34635347e6",
-
-            // apiKey: "", // Empty by default
+            apiKey: "", // Empty by default
             storySynopsis: projectData.storySynopsis,
             scriptRequirement: projectData.scriptRequirement,
             narrativeStyle: projectData.narrativeStyle,
