@@ -3,7 +3,6 @@ import {
     HomeOutlined,
     EditOutlined,
     FileTextOutlined,
-    SettingOutlined,
     CheckCircleOutlined,
     RocketOutlined
 } from '@ant-design/icons';
@@ -163,18 +162,6 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                     icon: <FileTextOutlined style={{ fontSize: 16, color: '#10b981' }} />,
                 }
             ]
-        },
-        {
-            type: 'divider',
-            style: { 
-                margin: '8px 16px',
-                background: 'rgba(0, 0, 0, 0.04)'
-            }
-        },
-        {
-            label: '设置',
-            key: 'settings',
-            icon: <SettingOutlined style={{ fontSize: 16, color: '#6b7280' }} />,
         }
     ];
 
@@ -217,11 +204,6 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                 break;
             case 'episodes':
                 navigateWithConfirmation('/episodes', e.key);
-                break;
-            case 'settings':
-                // TODO: Navigate to settings page when created
-                console.log('设置页面 - 即将推出！');
-                setCurrent(e.key);
                 break;
             default:
                 // Do nothing for the 'tools' key, it's a submenu
@@ -402,7 +384,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                         color: '#6b7280',
                         letterSpacing: '0.3px'
                     }}>
-                        清华大学
+                        AI Script Generator
                     </div>
 
                 </div>

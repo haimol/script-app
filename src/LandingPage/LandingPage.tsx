@@ -1162,12 +1162,10 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       {/* Footer credits */}
       <div className="form-footer">
         <Text type="secondary">
-          清华大学
+          AI Script Generator
         </Text>
         <br />
-        <Text type="secondary">
-          GitHub
-        </Text>
+
       </div>
     </div>
   );
