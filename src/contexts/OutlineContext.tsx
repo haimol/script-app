@@ -57,8 +57,43 @@ export const stringifyProjectData = (data: ProjectData): string => {
   return JSON.stringify(data);
 };
 
-// Helper function to create empty project data structure with Charles Lightoller's story
+// Helper function to create truly empty project data structure  
 export const createEmptyProjectData = (): ProjectData => {
+  return {
+    storySynopsis: "",
+    scriptRequirement: "",
+    narrativeStyle: 'linear' as const,
+    characters: [
+      {
+        id: `char-${Date.now()}-${Math.random()}`,
+        identity: '',
+        desire: '',
+        action: '',
+        designConcept: ''
+      }
+    ],
+    events: [
+      {
+        id: `event-${Date.now()}-${Math.random()}`,
+        coreProblem: '',
+        mainObstacle: '',
+        result: '',
+        designConcept: ''
+      }
+    ],
+    themes: [
+      {
+        id: `theme-${Date.now()}-${Math.random()}`,
+        positiveValue: '',
+        negativeValue: '',
+        designConcept: ''
+      }
+    ]
+  };
+};
+
+// Helper function to create demo project data with pre-filled example
+export const createDemoProjectData = (): ProjectData => {
   return {
     storySynopsis: "牧琳爱，1919年生于美国富裕家庭，青年时期被中国战乱与贫困的报道触动，毅然放弃优渥生活，于1941年独自赴华从事医疗救助。她在战火与贫困中奔波数十年，入籍中国，并在2002年变卖祖传庄园，捐资建成聊城国际和平医院，长期为贫困患者提供免费治疗。2009年，在一场剖腹产手术中突发心梗，她拒绝抢救自己，坚持先救产妇和孩子。2010年，她在聊城去世，留下跨越国界的大爱与无私奉献的传奇，证明生命与爱无国界。",
     scriptRequirement: "人物传记片，呈现医者仁心与无私奉献的生命抉择",
@@ -69,14 +104,14 @@ export const createEmptyProjectData = (): ProjectData => {
         identity: '医生、慈善家、外籍志愿者、无私奉献者',
         desire: '用医疗救治更多生命，特别是中国贫困和农村地区的患者',
         action: '放弃美国生活赴华；多年在战乱、贫困地区行医；变卖庄园捐建医院；坚持亲自手术；危急时坚持先救产妇与孩子',
-        designConcept: '故事核心人物，象征“跨国大爱”“医者仁心”的主题，通过其一生的选择和行动传递无私、平等和人道主义精神'
+        designConcept: '故事核心人物，象征"跨国大爱""医者仁心"的主题，通过其一生的选择和行动传递无私、平等和人道主义精神'
       },
       {
         id: 'char-patient',
         identity: '高危产妇、受助者',
         desire: '平安生产、保住孩子性命',
         action: '接受手术救治',
-        designConcept: '象征普通生命的宝贵性，推动高潮事件发生，并凸显牧琳爱“舍己救人”的价值取向'
+        designConcept: '象征普通生命的宝贵性，推动高潮事件发生，并凸显牧琳爱"舍己救人"的价值取向'
       },
       {
         id: 'char-medical-staff',
@@ -106,14 +141,14 @@ export const createEmptyProjectData = (): ProjectData => {
         coreProblem: '长期留在中国还是返回美国',
         mainObstacle: '生活条件艰苦、医疗资源不足',
         result: '加入中国国籍，长期在贫困地区行医',
-        designConcept: '深化与中国的情感与文化纽带，形成“第二故乡”的概念'
+        designConcept: '深化与中国的情感与文化纽带，形成"第二故乡"的概念'
       },
       {
         id: 'event-donate-hospital-2002',
         coreProblem: '是否舍弃祖传财富建医院',
         mainObstacle: '家族激烈反对、巨大财产损失',
         result: '捐出1,300万元建成聊城国际和平医院',
-        designConcept: '体现价值观的极致选择，“财富不如生命贵”主题达到高潮'
+        designConcept: '体现价值观的极致选择，"财富不如生命贵"主题达到高潮'
       },
       {
         id: 'event-heart-attack-2009',
@@ -127,7 +162,7 @@ export const createEmptyProjectData = (): ProjectData => {
         coreProblem: '生命的结束与影响的延续',
         mainObstacle: '身体衰竭不可逆',
         result: '在聊城安详离世，医院持续运作，精神被纪念',
-        designConcept: '落幕与传承，呼应主题“爱不分国界，生命不分贵贱”'
+        designConcept: '落幕与传承，呼应主题"爱不分国界，生命不分贵贱"'
       }
     ],
     themes: [
@@ -141,7 +176,7 @@ export const createEmptyProjectData = (): ProjectData => {
         id: 'theme-wealth-vs-life',
         positiveValue: '财富的最高意义在于拯救与改善生命',
         negativeValue: '舍弃财富可能带来经济不稳定与亲属矛盾',
-        designConcept: '通过变卖庄园的决策突出价值排序，强化“人命重于金钱”的主题'
+        designConcept: '通过变卖庄园的决策突出价值排序，强化"人命重于金钱"的主题'
       },
       {
         id: 'theme-cross-cultural',

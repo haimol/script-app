@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Card, Typography, Radio, Space } from "antd";
+import { Form, Input, Button, Card, Typography, Radio, Space, message } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -9,6 +9,7 @@ import {
   EventElement, 
   ThemeElement,
   createEmptyProjectData,
+  createDemoProjectData,
   stringifyProjectData 
 } from "../contexts/OutlineContext";
 import "./ApiConfigForm.css";
@@ -168,6 +169,22 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       storySynopsis: value
     };
     setDraftProjectData(updatedData);
+  };
+
+  // Fill form with demo data
+  const fillDemoData = () => {
+    const demoData = createDemoProjectData();
+    setDraftProjectData(demoData);
+    
+    // Also update form fields immediately
+    form.setFieldsValue({
+      storySynopsis: demoData.storySynopsis,
+      scriptRequirement: demoData.scriptRequirement,
+      narrativeStyle: demoData.narrativeStyle
+    });
+    
+    // Show success message
+    message.success('演示案例已填充！您可以直接使用或继续编辑');
   };
 
   // Sync form values with context data when projectData changes
@@ -355,6 +372,8 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           initialValues={{
             aiProvider: "deepseek",
             apiKey: "sk-08fc30a4bed1498f94c48b34635347e6",
+
+            // apiKey: "", // Empty by default
             storySynopsis: projectData.storySynopsis,
             scriptRequirement: projectData.scriptRequirement,
             narrativeStyle: projectData.narrativeStyle,
@@ -364,6 +383,50 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
           onKeyDown={handleKeyPress}
           scrollToFirstError
         >
+          {/* Demo Data Fill Button */}
+          <div style={{ 
+            marginBottom: 32, 
+            textAlign: 'center',
+            padding: '20px',
+            background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%)',
+            borderRadius: 16,
+            border: '1px solid rgba(59, 130, 246, 0.2)'
+          }}>
+            <Text style={{ 
+              fontSize: 14, 
+              color: '#1e40af', 
+              fontWeight: 500,
+              display: 'block',
+              marginBottom: 12
+            }}>
+              📋 快速开始
+            </Text>
+            <Button 
+              type="primary"
+              size="large"
+              onClick={fillDemoData}
+              style={{
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                border: 'none',
+                boxShadow: '0 4px 16px rgba(59, 130, 246, 0.3)',
+                fontWeight: 600,
+                height: 48,
+                padding: '0 24px'
+              }}
+            >
+              填充演示案例
+            </Button>
+            <Text style={{ 
+              fontSize: 12, 
+              color: '#64748b',
+              display: 'block',
+              marginTop: 8
+            }}>
+              
+            </Text>
+          </div>
+
           {/* AI Provider Selection */}
           <Form.Item 
             label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>AI提供商</span>}
