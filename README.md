@@ -1,61 +1,64 @@
-# Script Writer - AI-Powered Script Generation Platform
+# AI Script Generator
 
-A modern React TypeScript application that helps users generate professional script outlines using AI services like OpenAI and DeepSeek.
+A comprehensive React TypeScript application for generating professional film and TV scripts using AI. The app provides a complete workflow from initial concept to detailed episode scripts with an intuitive three-stage process.
 
 ## 🚀 Features
 
-### 🤖 AI Integration
-- **Dual AI Provider Support**: Choose between OpenAI (GPT-4) and DeepSeek
-- **Automatic Script Generation**: AI generates detailed, professional script outlines
-- **Smart Prompting**: Optimized prompts for script writing and creative content
-- **Real-time Generation**: Live feedback during AI processing
+### 🎬 Complete Script Generation Workflow
+- **Project Setup**: Configure story concepts, characters, themes, and narrative styles
+- **Outline Generation**: AI-powered story structure and episode breakdowns
+- **Episode Development**: Detailed script generation with chat-based refinement
+- **Multi-Episode Management**: Handle complex series with multiple episodes
 
-### 📝 Modern Editing Experience
-- **Markdown Editor**: Live preview markdown editor for script outlines
-- **Real-time Rendering**: See formatted output while editing
-- **Professional Formatting**: Headers, lists, emphasis, and code blocks
-- **Export Ready**: Content formatted for professional use
+### 🤖 Advanced AI Integration
+- **Dual AI Provider Support**: OpenAI GPT-4o and DeepSeek Reasoner
+- **Conversational AI**: Chat interface for iterative script refinement
+- **Context-Aware Generation**: AI maintains story consistency across episodes
+- **Professional Prompting**: Optimized prompts for screenplay and script writing
 
-### 🎨 User Interface
-- **Modern Design**: Clean, professional interface built with Ant Design
-- **Responsive Layout**: Works on desktop and mobile devices
-- **Fixed Sidebar Navigation**: Easy navigation between pages
-- **Form Persistence**: Values persist across page navigation
-- **Loading States**: Clear feedback during AI generation
+### 📝 Professional Editing Experience
+- **MDX Editor**: Advanced markdown editor with live preview
+- **Script Panel**: Dedicated script viewing and management
+- **Real-time Collaboration**: Chat with AI while editing
+- **Export Ready**: Professional script formatting
 
-### 🔧 Technical Features
-- **TypeScript**: Full type safety throughout the application
-- **React Router**: Seamless navigation between pages
-- **Component Architecture**: Modular, reusable components
-- **State Management**: Efficient form data handling
-- **Error Handling**: Comprehensive error boundaries and user feedback
+### 🎨 Modern User Interface
+- **Three-Stage Workflow**: Landing → Outline → Episodes
+- **Responsive Design**: Works on desktop and mobile
+- **Navigation Protection**: Warns before losing unsaved work
+- **State Persistence**: Data maintained across navigation
+- **Demo Data**: Quick start with sample content
 
 ## 📁 Project Structure
 
 ```
 src/
 ├── components/           # Reusable UI components
-│   └── Side.tsx         # Navigation sidebar
-├── Form/                # Form components (legacy)
-├── LandingPage/         # Main form page
-│   ├── LandingPage.tsx  # AI configuration form
-│   └── ApiConfigForm.css # Form styling
-├── Menu/                # Main application layout
-│   ├── Menu.tsx         # App framework and routing
-│   └── Menu.css         # Layout styling
-├── OutlinePage/         # Script outline editor
-│   └── OutlinePage.tsx  # AI-powered outline generation
-└── router.tsx           # Legacy router (deprecated)
+│   ├── Side.tsx         # Navigation sidebar with exit confirmation
+│   └── ChatPanel.tsx    # AI conversation interface
+├── contexts/            # State management
+│   └── OutlineContext.tsx # Global app state and data persistence
+├── LandingPage/         # Project configuration (Stage 1)
+│   ├── LandingPage.tsx  # Form for story setup and AI config
+│   └── ApiConfigForm.css
+├── OutlinePage/         # Outline generation (Stage 2)
+│   └── OutlinePage.tsx  # AI-powered outline creation and editing
+├── EpisodePage/         # Episode development (Stage 3)
+│   └── EpisodePage.tsx  # Multi-episode management and script generation
+├── Menu/                # App layout and routing
+│   ├── Menu.tsx         # Main application framework
+│   └── Menu.css
+└── router.tsx           # Application routing configuration
 ```
 
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
-- Node.js (v16 or higher)
-- npm or yarn
-- OpenAI API key or DeepSeek API key
+- **Node.js** (v16 or higher)
+- **npm** (comes with Node.js)
+- **AI API Key**: OpenAI or DeepSeek account
 
-### Installation
+### Quick Start
 ```bash
 # Clone the repository
 git clone <repository-url>
@@ -66,144 +69,183 @@ npm install
 
 # Start development server
 npm start
+
+# Open browser to http://localhost:3000
 ```
 
-### Environment Setup
-1. Obtain an API key from [OpenAI](https://platform.openai.com/) or [DeepSeek](https://platform.deepseek.com/)
-2. The application will prompt you to enter your API key in the form
+### API Setup
+1. **OpenAI**: Get API key from [platform.openai.com](https://platform.openai.com/)
+2. **DeepSeek**: Get API key from [platform.deepseek.com](https://platform.deepseek.com/)
+3. **Enter in app**: API key field in the landing page form
 
 ## 📖 Usage Guide
 
-### 1. Configure AI Settings
-- Navigate to the home page
-- Select your preferred AI provider (OpenAI or DeepSeek)
-- Enter your API key
-- Provide a detailed script description
+### Stage 1: Project Setup (Landing Page)
+1. **Choose AI Provider**: Select OpenAI or DeepSeek
+2. **Enter API Key**: Your AI service API key
+3. **Story Synopsis**: Detailed description of your story/series
+4. **Script Requirements**: Specify tone, genre, and requirements
+5. **Narrative Style**: Choose linear, flashback, or intercut structure
+6. **Characters & Themes**: Define main characters and story themes
+7. **Demo Data**: Use "填充演示案例" for quick start
 
-### 2. Generate Script Outline
-- Click "Submit" to process your request
-- The app automatically navigates to the outline page
-- AI generates a professional script outline based on your description
-- View the formatted result in the markdown editor
+### Stage 2: Outline Generation (Outline Page)
+1. **AI Generation**: Automatic outline creation based on your inputs
+2. **Interactive Chat**: Refine outline through AI conversation
+3. **Markdown Editing**: Direct editing with live preview
+4. **Structure Validation**: Ensure proper story structure
+5. **Episode Planning**: Define number and structure of episodes
 
-### 3. Edit and Refine
-- Use the live markdown editor to modify the generated outline
-- See real-time preview of formatting changes
-- Use toolbar buttons for easy markdown formatting
-- Regenerate or clear content as needed
-
-### 4. Navigation
-- Use the sidebar to navigate between pages
-- Form values persist when returning to the home page
-- Outline content is maintained during editing sessions
+### Stage 3: Episode Development (Episodes Page)
+1. **Episode Management**: Left panel shows all episodes
+2. **Script Generation**: Click "生成剧本" for individual episodes
+3. **Multi-Panel Interface**: 
+   - **Left**: Episode list and management
+   - **Center**: Episode outline editing
+   - **Right**: Generated script viewing
+4. **AI Chat Integration**: Refine episodes through conversation
+5. **Script Export**: Copy and export completed scripts
 
 ## 🔌 API Integration
 
-### OpenAI Integration
+### OpenAI Configuration
 ```typescript
 const openai = new OpenAI({
-  apiKey: userApiKey,
+  apiKey: formData.apiKey,
   dangerouslyAllowBrowser: true
 });
 
+// GPT-4o for script generation
 const completion = await openai.chat.completions.create({
   model: "gpt-4o",
   messages: [
-    { role: "system", content: "You are a professional script writer..." },
-    { role: "user", content: userPrompt }
+    { role: "system", content: "You are a professional screenwriter..." },
+    { role: "user", content: prompt }
   ]
 });
 ```
 
-### DeepSeek Integration
+### DeepSeek Configuration
 ```typescript
 const openai = new OpenAI({
   baseURL: 'https://api.deepseek.com',
-  apiKey: userApiKey,
+  apiKey: formData.apiKey,
   dangerouslyAllowBrowser: true
 });
 
+// DeepSeek Reasoner for advanced script analysis
 const completion = await openai.chat.completions.create({
-  model: "deepseek-chat",
-  messages: [/* same structure as OpenAI */]
+  model: "deepseek-reasoner",
+  messages: [/* same structure */]
 });
 ```
 
-## 🏗️ Architecture Overview
+## 🏗️ Architecture
 
-### Component Hierarchy
+### State Management
+- **OutlineContext**: Global state provider managing all app data
+- **Form Data Persistence**: Maintains user inputs across navigation
+- **Episode State**: Complex state for multi-episode management
+- **Chat History**: Conversational context preservation
+
+### Component Architecture
 ```
-MainFramework (Menu.tsx)
-├── Header (Navigation bar)
-├── Side (Navigation sidebar)
-└── Content (Route-based pages)
-    ├── LandingPage (AI configuration form)
-    └── OutlinePage (Markdown editor with AI generation)
+App
+├── AppRouter
+└── MainFramework (Menu.tsx)
+    ├── Header & Navigation
+    ├── Side (Navigation with exit confirmation)
+    └── Content (Route-based rendering)
+        ├── LandingPage (Form with demo data)
+        ├── OutlinePage (MDX editor + chat)
+        └── EpisodePage (Multi-panel episode management)
 ```
 
 ### Data Flow
-1. **Form Input**: User configures AI settings and script description
-2. **State Management**: Parent component stores form data
-3. **Navigation**: React Router passes data between pages
-4. **AI Processing**: Appropriate API called based on provider selection
-5. **Content Display**: Markdown editor renders and allows editing
-
-### State Management
-- **Parent State**: Form data persisted in MainFramework component
-- **Local State**: Component-specific UI states (loading, editing)
-- **Router State**: Data passed between routes for navigation
-- **Form Persistence**: Values maintained across page navigation
+1. **Landing**: User inputs → FormData → OutlineContext
+2. **Outline**: AI generation → OutlineText → Context persistence
+3. **Episodes**: Multi-episode state → Script generation → Export
 
 ## 🔧 Development
 
 ### Available Scripts
-- `npm start` - Start development server
+- `npm start` - Development server with hot reload
 - `npm test` - Run test suite
-- `npm run build` - Build for production
-- `npm run eject` - Eject from Create React App (one-way operation)
+- `npm run build` - Production build
+- `npm run eject` - Eject from Create React App
 
 ### Key Dependencies
-- **React 18** - UI framework
-- **TypeScript** - Type safety
-- **Ant Design** - UI component library
-- **React Router** - Navigation
-- **OpenAI SDK** - AI API integration
-- **@uiw/react-md-editor** - Markdown editing
+- **React 18** - Modern React with hooks
+- **TypeScript 4.9** - Full type safety
+- **Ant Design 5** - Professional UI components
+- **React Router 6** - Modern routing with data loading
+- **OpenAI SDK** - AI integration
+- **@mdxeditor/editor** - Advanced markdown editing
+- **@uiw/react-md-editor** - Alternative markdown editor
 
-## 🚀 Deployment
+### Development Features
+- **Hot Reload**: Instant development feedback
+- **TypeScript**: Comprehensive type checking
+- **ESLint**: Code quality enforcement
+- **Navigation Guards**: Prevent data loss during development
 
-### Production Build
+## 🚀 Production Deployment
+
+### Build Process
 ```bash
+# Create production build
 npm run build
+
+# Static files in build/ directory
+# Deploy to any static hosting service
 ```
 
-### Important Security Notes
-- **API Keys**: In production, move API calls to backend services
-- **CORS**: Current implementation uses `dangerouslyAllowBrowser: true`
-- **Environment Variables**: Store sensitive configuration in environment variables
+### Security Considerations
+- **API Keys**: Store securely, consider backend proxy
+- **CORS Policy**: Current client-side implementation for development
+- **Environment Variables**: Use for production configuration
+- **Rate Limiting**: Monitor AI API usage
 
-## 📝 Future Enhancements
+## 🔮 Advanced Features
 
-- [ ] Backend API integration for secure key management
-- [ ] User authentication and project saving
-- [ ] Multiple script formats (screenplay, stage play, etc.)
-- [ ] Export to various formats (PDF, Word, Final Draft)
-- [ ] Collaboration features
-- [ ] Version history and project management
-- [ ] Additional AI providers (Anthropic, Gemini)
+### Navigation Protection
+- **Exit Confirmation**: Warns before leaving episode page with unsaved work
+- **Data Persistence**: Smart state management across navigation
+- **Browser Events**: Handles refresh/close tab scenarios
+
+### AI Chat Integration
+- **Contextual Conversations**: Maintains conversation history per episode
+- **Smart Prompting**: Context-aware AI interactions
+- **Real-time Processing**: Live feedback during AI generation
+
+### Multi-Episode Management
+- **Episode Status Tracking**: Outline → Generating → Script Ready
+- **Batch Operations**: Manage multiple episodes simultaneously  
+- **Script Organization**: Tabbed interface for script viewing
+
+## 📝 Future Roadmap
+
+- [ ] **Backend Integration**: Secure API key management
+- [ ] **User Authentication**: Personal project management
+- [ ] **Cloud Storage**: Project backup and sync
+- [ ] **Collaboration**: Multi-user script development
+- [ ] **Export Formats**: PDF, Final Draft, Fountain
+- [ ] **Template System**: Genre-specific script templates
+- [ ] **Version Control**: Script revision history
+- [ ] **Additional AI Models**: Anthropic Claude, Google Gemini
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Create feature branch (`git checkout -b feature/new-feature`)
+3. Commit changes (`git commit -m 'Add new feature'`)
+4. Push to branch (`git push origin feature/new-feature`)
+5. Create Pull Request
 
 ## 📄 License
 
-This project is part of Tsinghua University coursework.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🏫 Academic Context
+## 🎯 About
 
-Developed as part of software engineering coursework at Tsinghua University. This project demonstrates modern web development practices, AI integration, and professional software architecture.
+AI Script Generator is a professional tool for screenwriters, content creators, and storytellers who want to leverage AI for script development while maintaining creative control and professional quality output.
