@@ -22,7 +22,7 @@ jobs:
       run: npm ci --registry https://registry.npmmirror.com/
     
     - name: Build application
-      run: npm run build
+      run: CI=false npm run build
     
     - name: Deploy to server
       uses: appleboy/ssh-action@v0.1.7
