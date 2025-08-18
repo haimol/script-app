@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Alert, Button, Skeleton, message, Select, Badge, Card, Typography, Tabs } from "antd";
-import { useLocation } from "react-router-dom";
+import { Alert, Button, Skeleton, message, Select, Badge, Card, Typography, Tabs, Modal } from "antd";
+import { useLocation, useNavigate } from "react-router-dom";
 import OpenAI from "openai";
 import ChatPanel from "../components/ChatPanel";
 import { useOutlineContext, FormData, ChatMessage, parseProjectData, ProjectData } from "../contexts/OutlineContext";
@@ -48,6 +48,7 @@ type ChatContext = 'global' | 'episode';
 
 const EpisodePage: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { outlineData } = useOutlineContext();
   
   // Get data from context or location state (for backward compatibility)
@@ -85,6 +86,31 @@ const EpisodePage: React.FC = () => {
   
   // Layout state for chat/editor split
   const [chatHeight, setChatHeight] = useState(50); // 50% by default
+
+  // Navigation blocking state
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [isNavigationBlocked, setIsNavigationBlocked] = useState(false);
+  
+  // Check if user has made changes worth protecting
+  const hasUnsavedChanges = () => {
+    return episodes.length > 0 && (
+      episodes.some(ep => ep.outline.trim() !== '') || 
+      episodes.some(ep => ep.script) ||
+      globalChatHistory.length > 1 || // More than just system message
+      episodes.some(ep => ep.chatHistory.length > 0)
+    );
+  };
+
+  // Custom navigate function that checks for unsaved changes
+  const navigateWithConfirmation = (path: string) => {
+    if (hasUnsavedChanges()) {
+      setPendingNavigation(path);
+      setShowExitConfirm(true);
+    } else {
+      navigate(path);
+    }
+  };
 
   // Unified AI API calling function (reused from OutlinePage)
   const callAI = async (prompt: string, apiKey: string, provider: 'openai' | 'deepseek'): Promise<string> => {
@@ -528,7 +554,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
       console.log(`🎬 为 ${episode.title} 生成剧本...`);
       const scriptContent = await callAI(prompt, formData.apiKey, formData.aiProvider);
 
-      // Update episode with generated script
+      // Update episode with generated script and immediately show script panel
       setEpisodes(prev => prev.map(ep => 
         ep.id === episodeId ? { 
           ...ep, 
@@ -537,8 +563,11 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
         } : ep
       ));
 
+      // Immediately set the script panel visibility and selection
       setScriptPanelVisible(true);
       setSelectedScriptId(episodeId);
+      
+      console.log(`✅ Script generated for ${episode.title}, panel should now be visible`);
       message.success(`已为 ${episode.title} 生成剧本！`);
 
     } catch (error) {
@@ -559,6 +588,46 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
     }
   }, [formData, outlineText, episodeCount]); // initializeEpisodes is defined inline and depends on these props
 
+  // Add beforeunload handler for browser navigation (refresh, close tab, etc.)
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges()) {
+        e.preventDefault();
+        e.returnValue = '您有未保存的剧集内容，确定要离开吗？';
+        return '您有未保存的剧集内容，确定要离开吗？';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [episodes, globalChatHistory]);
+
+  // Debug effect to monitor script panel state changes
+  useEffect(() => {
+    console.log('🔍 Script panel state:', {
+      scriptPanelVisible,
+      selectedScriptId,
+      episodesWithScript: episodes.filter(ep => ep.script).length,
+      currentSelectedScript: episodes.find(ep => ep.id === selectedScriptId)?.script ? 'Found' : 'Not found'
+    });
+  }, [scriptPanelVisible, selectedScriptId, episodes]);
+
+  // Handle navigation confirmation
+  const handleConfirmExit = () => {
+    setShowExitConfirm(false);
+    if (pendingNavigation) {
+      navigate(pendingNavigation);
+      setPendingNavigation(null);
+    }
+  };
+
+  const handleCancelExit = () => {
+    setShowExitConfirm(false);
+    setPendingNavigation(null);
+  };
+
   // Handle case where user navigates directly without outline data
   if (!formData || !outlineText) {
     return (
@@ -569,7 +638,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
           type="warning"
           showIcon
           action={
-            <Button size="small" type="primary" onClick={() => window.location.href = '/outline'}>
+            <Button size="small" type="primary" onClick={() => navigateWithConfirmation('/outline')}>
               前往大纲页面
             </Button>
           }
@@ -1042,18 +1111,33 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                 </div>
                 
                 <div style={{ flex: 1, overflow: 'hidden' }}>
-                  <Tabs
-                    type="card"
-                    size="small"
-                    activeKey={selectedScriptId}
-                    onChange={setSelectedScriptId}
-                    style={{ height: '100%' }}
-                    items={episodes
-                      .filter(ep => ep.script)
-                      .map(ep => ({
-                        key: ep.id,
-                        label: ep.title.split(':')[0],
-                        children: (
+                  {episodes.filter(ep => ep.script).length === 0 ? (
+                    <div style={{ 
+                      padding: 40, 
+                      textAlign: 'center',
+                      color: '#8b949e'
+                    }}>
+                      <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+                      <div style={{ fontSize: 16, marginBottom: 8 }}>暂无已生成的剧本</div>
+                      <div style={{ fontSize: 12 }}>点击左侧的"生成剧本"按钮开始创作</div>
+                    </div>
+                  ) : (
+                    <Tabs
+                      type="card"
+                      size="small"
+                      activeKey={selectedScriptId}
+                      onChange={setSelectedScriptId}
+                      style={{ height: '100%' }}
+                      items={episodes
+                        .filter(ep => {
+                          const hasScript = Boolean(ep.script);
+                          console.log(`Episode ${ep.title}: has script = ${hasScript}, script length = ${ep.script?.length || 0}`);
+                          return hasScript;
+                        })
+                        .map(ep => ({
+                          key: ep.id,
+                          label: ep.title.split(':')[0],
+                          children: (
                           <div style={{ 
                             padding: 16, 
                             height: 'calc(100vh - 250px)', 
@@ -1070,7 +1154,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                               whiteSpace: 'pre-wrap',
                               border: '1px solid #e5e7eb'
                             }}>
-                              {ep.script}
+                              {ep.script || '正在加载剧本...'}
                             </div>
                             
                             <div style={{ 
@@ -1094,12 +1178,92 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                       }))
                     }
                   />
+                  )}
                 </div>
               </div>
             )}
           </>
         )}
       </div>
+
+      {/* Exit Confirmation Modal */}
+      <Modal
+        title={
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '12px',
+            color: '#faad14'
+          }}>
+            <span style={{ fontSize: '24px' }}>⚠️</span>
+            <span style={{ fontWeight: 600, fontSize: '18px' }}>确认离开剧集页面</span>
+          </div>
+        }
+        open={showExitConfirm}
+        onOk={handleConfirmExit}
+        onCancel={handleCancelExit}
+        okText="确认离开"
+        cancelText="继续编辑"
+        okType="danger"
+        width={520}
+        centered
+        maskClosable={false}
+        closeIcon={null}
+        bodyStyle={{ 
+          padding: '24px',
+          fontSize: '15px',
+          lineHeight: '1.6'
+        }}
+        okButtonProps={{
+          size: 'large',
+          style: {
+            color: '#ffffff',
+            backgroundColor: '#ff4d4f',
+            borderColor: '#ff4d4f',
+            fontWeight: 600,
+            height: '44px',
+            padding: '0 24px'
+          }
+        }}
+        cancelButtonProps={{
+          size: 'large',
+          style: {
+            fontWeight: 600,
+            height: '44px',
+            padding: '0 24px'
+          }
+        }}
+      >
+        <div style={{ color: '#4a5568' }}>
+          <p style={{ marginBottom: '16px', fontWeight: 500 }}>
+            🚨 <strong>重要提醒：</strong>您即将离开剧集管理页面
+          </p>
+          
+          <div style={{ 
+            background: '#fff7ed', 
+            border: '1px solid #fed7aa',
+            borderRadius: '8px',
+            padding: '16px',
+            marginBottom: '16px'
+          }}>
+            <p style={{ margin: 0, marginBottom: '12px', fontWeight: 500, color: '#c2410c' }}>
+              以下内容将会丢失：
+            </p>
+            <ul style={{ margin: 0, paddingLeft: '20px', color: '#9a3412' }}>
+              <li>所有已生成的剧集大纲</li>
+              <li>剧集间的聊天对话记录</li>
+              <li>已生成的剧本内容</li>
+              <li>当前的编辑进度</li>
+            </ul>
+          </div>
+
+          <p style={{ margin: 0, color: '#6b7280' }}>
+            这些数据仅存储在当前会话中，离开后将无法恢复。
+            <br />
+            <strong>建议：</strong>如需保存，请先复制重要内容。
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -8,7 +8,7 @@ import {
     RocketOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Layout, Menu, Badge } from 'antd';
+import { Layout, Menu, Badge, Modal } from 'antd';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useOutlineContext } from '../contexts/OutlineContext';
 
@@ -25,6 +25,19 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
     const { hasValidOutlineData } = useOutlineContext();
     const [internalCollapsed, setInternalCollapsed] = useState(window.innerWidth < 1000);
     const [current, setCurrent] = useState('home');
+    
+    // Navigation confirmation state
+    const [showExitConfirm, setShowExitConfirm] = useState(false);
+    const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+
+    // Check if we're currently on episodes page and might have unsaved data
+    const isOnEpisodesPage = location.pathname === '/episodes';
+    
+    // Simple heuristic to check if user might have episode data
+    // (We can't access episode state from here, so we use a basic check)
+    const mightHaveEpisodeData = () => {
+        return isOnEpisodesPage && hasValidOutlineData();
+    };
 
     // Use controlled collapse state if provided, otherwise use internal state
     const collapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
@@ -165,30 +178,55 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
         }
     ];
 
+    // Navigation confirmation handlers
+    const handleConfirmExit = () => {
+        setShowExitConfirm(false);
+        if (pendingNavigation) {
+            navigate(pendingNavigation);
+            setPendingNavigation(null);
+        }
+    };
+
+    const handleCancelExit = () => {
+        setShowExitConfirm(false);
+        setPendingNavigation(null);
+    };
+
+    // Safe navigation function
+    const navigateWithConfirmation = (path: string, menuKey: string) => {
+        if (isOnEpisodesPage && mightHaveEpisodeData() && path !== '/episodes') {
+            setPendingNavigation(path);
+            setShowExitConfirm(true);
+        } else {
+            setCurrent(menuKey);
+            navigate(path);
+        }
+    };
+
     // Handle menu item clicks
     const onClick: MenuProps['onClick'] = (e) => {
         console.log('Navigation click:', e);
-        setCurrent(e.key);
         
         // Navigation logic
         switch (e.key) {
             case 'home':
-                navigate('/');
+                navigateWithConfirmation('/', e.key);
                 break;
             case 'outline':
-                navigate('/outline');
+                navigateWithConfirmation('/outline', e.key);
                 break;
             case 'episodes':
-                navigate('/episodes');
+                navigateWithConfirmation('/episodes', e.key);
                 break;
             case 'settings':
                 // TODO: Navigate to settings page when created
                 console.log('设置页面 - 即将推出！');
+                setCurrent(e.key);
                 break;
             default:
                 // Do nothing for the 'tools' key, it's a submenu
                 if (e.key !== 'tools') {
-                    navigate('/');
+                    navigateWithConfirmation('/', 'home');
                 }
         }
     };
@@ -369,6 +407,75 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
 
                 </div>
             )}
+
+            {/* Exit Confirmation Modal */}
+            <Modal
+                title={
+                    <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '12px',
+                        color: '#faad14'
+                    }}>
+                        <span style={{ fontSize: '20px' }}>⚠️</span>
+                        <span style={{ fontWeight: 600, fontSize: '16px' }}>确认离开剧集页面</span>
+                    </div>
+                }
+                open={showExitConfirm}
+                onOk={handleConfirmExit}
+                onCancel={handleCancelExit}
+                okText="确认离开"
+                cancelText="继续编辑"
+                okType="danger"
+                width={480}
+                centered
+                maskClosable={false}
+                closeIcon={null}
+                bodyStyle={{ 
+                    padding: '20px',
+                    fontSize: '14px',
+                    lineHeight: '1.5'
+                }}
+                okButtonProps={{
+                    size: 'large',
+                    style: {
+                        color: '#ffffff',
+                        backgroundColor: '#ff4d4f',
+                        borderColor: '#ff4d4f',
+                        fontWeight: 600
+                    }
+                }}
+                cancelButtonProps={{
+                    size: 'large',
+                    style: {
+                        fontWeight: 600
+                    }
+                }}
+            >
+                <div style={{ color: '#4a5568' }}>
+                    <p style={{ marginBottom: '16px', fontWeight: 500 }}>
+                        您在剧集页面可能有未保存的内容：
+                    </p>
+                    
+                    <div style={{ 
+                        background: '#fff7ed', 
+                        border: '1px solid #fed7aa',
+                        borderRadius: '6px',
+                        padding: '12px',
+                        marginBottom: '16px'
+                    }}>
+                        <ul style={{ margin: 0, paddingLeft: '18px', color: '#9a3412' }}>
+                            <li>剧集大纲编辑内容</li>
+                            <li>AI 对话记录</li>
+                            <li>已生成的剧本</li>
+                        </ul>
+                    </div>
+
+                    <p style={{ margin: 0, color: '#6b7280', fontSize: '13px' }}>
+                        离开后这些数据将丢失，确定要继续吗？
+                    </p>
+                </div>
+            </Modal>
         </Sider>
     );
 };
