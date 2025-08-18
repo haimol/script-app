@@ -384,7 +384,7 @@ const Side: React.FC<SideProps> = ({ collapsed: controlledCollapsed, onCollapse 
                         color: '#6b7280',
                         letterSpacing: '0.3px'
                     }}>
-                        AI Script Generator
+                        Script Generator
                     </div>
 
                 </div>
