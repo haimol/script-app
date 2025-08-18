@@ -98,23 +98,23 @@ const OutlinePage: React.FC = () => {
         temperature: 0.7,
       });
 
-      return completion.choices[0].message.content || "No response generated.";
+      return completion.choices[0].message.content || "未生成响应。";
     } catch (error) {
       console.error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API Error:`, error);
-      throw new Error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API 错误: ${error instanceof Error ? error.message : '未知错误'}`);
     }
   };
 
   // Main function to generate outline using AI
   const generateAIOutline = async () => {
     if (!formData) {
-      message.error('Form data is missing');
+      message.error('表单数据缺失');
       return;
     }
 
     // Require API key for AI generation
     if (!formData.apiKey) {
-      message.error('API key is required to generate AI outline');
+      message.error('需要API密钥才能生成AI大纲');
       setIsGenerating(false);
       return;
     }
@@ -126,7 +126,7 @@ const OutlinePage: React.FC = () => {
       const projectData = parseProjectData(formData.projectDataJson);
       
       if (!projectData) {
-        throw new Error('Invalid project data format');
+        throw new Error('项目数据格式无效');
       }
 
       // Create comprehensive prompt using PO's design with JSON data integration
@@ -242,7 +242,7 @@ ${projectData.storySynopsis}
 
     } catch (error) {
       console.error('AI Generation Error:', error);
-      message.error(`Failed to generate outline: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      message.error(`生成大纲失败: ${error instanceof Error ? error.message : '未知错误'}`);
     } finally {
       setIsGenerating(false);
     }
@@ -272,7 +272,7 @@ ${projectData.storySynopsis}
       const projectData = parseProjectData(formData.projectDataJson);
       
       if (!projectData) {
-        throw new Error('Invalid project data format');
+        throw new Error('项目数据格式无效');
       }
 
       // Create enhanced prompt with context using current editor content and structured data
@@ -346,7 +346,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
               const jsonStr = aiResponse.substring(jsonStart, jsonEnd + 1);
               parsedResponse = JSON.parse(jsonStr);
             } else {
-              throw new Error('No JSON found in response');
+              throw new Error('响应中未找到JSON');
             }
           }
         } catch (secondParseError) {
@@ -365,9 +365,9 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
       // Validate parsed response structure
       if (!parsedResponse || typeof parsedResponse !== 'object') {
         parsedResponse = {
-          chatReply: "I processed your request but couldn't format the response properly.",
+          chatReply: "我已处理您的请求，但无法正确格式化响应。",
           outlineUpdate: null,
-          updateReason: "Invalid response format"
+                      updateReason: "响应格式无效"
         };
       }
 
@@ -403,12 +403,12 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
         type: 'assistant',
-        content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        content: `抱歉，我遇到了一个错误: ${error instanceof Error ? error.message : '未知错误'}`,
         timestamp: new Date()
       };
       
       setChatHistory((prev: ChatMessage[]) => [...prev, errorMessage]);
-      message.error('Failed to process chat message');
+      message.error('处理聊天消息失败');
     } finally {
       setIsChatProcessing(false);
     }
@@ -417,7 +417,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
   // Function to proceed to episode management
   const proceedToEpisodes = () => {
     if (!outlineText.trim()) {
-      message.error('Please create an outline first before proceeding to episodes');
+      message.error('请先创建大纲，然后再前往剧集管理');
       return;
     }
 
@@ -446,13 +446,13 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
     return (
       <div style={{ padding: 24 }}>
         <Alert
-          message="No Form Data Found"
-          description="Please fill out the form first to generate an outline."
+          message="未找到表单数据"
+          description="请先填写表单以生成大纲。"
           type="warning"
           showIcon
           action={
             <Button size="small" type="primary" onClick={() => navigate('/')}>
-              Go to Landing Page
+              前往首页
             </Button>
           }
         />
@@ -478,13 +478,13 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
       }}>
         <Alert
-          message={isGenerating ? "🤖 Generating AI Outline..." : initialGenerationComplete ? "✨ AI Outline Ready!" : "⚡ Preparing..."}
+          message={isGenerating ? "🤖 正在生成AI大纲..." : initialGenerationComplete ? "✨ AI大纲已就绪！" : "⚡ 准备中..."}
           description={
             isGenerating 
-              ? `Using ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI to craft your script outline...`
+              ? `正在使用 ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI 制作您的剧本大纲...`
               : initialGenerationComplete
-                ? `Generated with ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI • Start chatting to refine your outline`
-                : "Setting up your creative workspace..."
+                ? `由 ${formData.aiProvider.charAt(0).toUpperCase() + formData.aiProvider.slice(1)} AI 生成 • 开始聊天以完善您的大纲`
+                : "正在设置您的创意工作空间..."
           }
           type={isGenerating ? "info" : initialGenerationComplete ? "success" : "info"}
           showIcon
@@ -513,7 +513,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                   fontWeight: 500
                 }}
               >
-                🔄 Regenerate
+                🔄 重新生成
               </Button>
             )
           }
@@ -576,8 +576,8 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                     color: '#6b7280',
                     lineHeight: 1.6
                   }}>
-                    Interactive Chat<br />
-                    <span style={{ fontSize: 14, color: '#9ca3af' }}>Available after outline generation</span>
+                    交互式聊天<br />
+                    <span style={{ fontSize: 14, color: '#9ca3af' }}>大纲生成后可用</span>
                   </div>
                 </div>
               </div>
@@ -814,7 +814,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                     size="small"
                     onClick={() => {
                       navigator.clipboard.writeText(outlineText);
-                      message.success('Content copied to clipboard!');
+                      message.success('内容已复制到剪贴板！');
                     }}
                     disabled={!outlineText}
                     type="primary"
@@ -829,7 +829,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                       gap: '6px'
                     }}
                   >
-                    📋 Copy
+                    📋 复制
                   </Button>
                   <Button 
                     size="small"
@@ -846,7 +846,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                       gap: '6px'
                     }}
                   >
-                    🗑️ Clear
+                    🗑️ 清除
                   </Button>
                   
                   {/* Episode Count Input */}
@@ -894,7 +894,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                       gap: '6px'
                     }}
                   >
-                    🎬 Create Episodes
+                    🎬 创建剧集
                   </Button>
                   <div style={{ 
                     fontSize: 12, 
@@ -907,7 +907,7 @@ ${chatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
                     border: '1px solid rgba(0, 0, 0, 0.06)',
                     fontWeight: 500
                   }}>
-                    {outlineText.length.toLocaleString()} characters
+                    {outlineText.length.toLocaleString()} 字符
                   </div>
                 </div>
               </div>

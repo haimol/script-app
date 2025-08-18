@@ -270,11 +270,11 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
         >
           <div style={{ textAlign: 'center' }}>
             <Text strong style={{ color: '#52c41a', fontSize: 16 }}>
-              ✨ You have an existing outline!
+              ✨ 您有一个现有的大纲！
             </Text>
             <br />
             <Text type="secondary" style={{ display: 'block', margin: '8px 0 16px' }}>
-              Continue working on your script or create a new one below
+              继续完善您的剧本或在下方创建新剧本
             </Text>
             <Button 
               type="primary" 
@@ -282,13 +282,13 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
               onClick={() => navigate('/outline')}
               style={{ marginRight: 12 }}
             >
-              Continue Editing Outline
+              继续编辑大纲
             </Button>
             <Button 
               size="large"
               onClick={() => navigate('/episodes')}
             >
-              Manage Episodes
+              管理剧集
             </Button>
             <br />
             <Button 
@@ -301,7 +301,7 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
               }}
               style={{ marginTop: 8, color: '#ff4d4f' }}
             >
-              Start Fresh (Clear All Data)
+              重新开始（清除所有数据）
             </Button>
           </div>
         </Card>
@@ -332,11 +332,11 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
             overflow: 'hidden'
           }}>
             <Text style={{ color: '#d46b08', fontWeight: 500 }}>
-              ⚠️ Creating New Project
+              ⚠️ 创建新项目
             </Text>
             <br />
             <Text type="secondary" style={{ fontSize: 12 }}>
-              Submitting this form will clear your current outline and create a new project
+              提交此表单将清除您当前的大纲并创建新项目
             </Text>
           </div>
         )}
@@ -366,12 +366,12 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
         >
           {/* AI Provider Selection */}
           <Form.Item 
-            label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>AI Provider</span>}
+            label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>AI提供商</span>}
             name="aiProvider"
             rules={[
-              { required: true, message: 'Please select an AI provider!' }
+              { required: true, message: '请选择AI提供商！' }
             ]}
-            tooltip="Choose which AI service to use for generating your script"
+            tooltip="选择用于生成剧本的AI服务"
             style={{ marginBottom: 28 }}
           >
             <Radio.Group 
@@ -421,16 +421,16 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
 
           {/* API Key Field - Password input for security */}
           <Form.Item 
-            label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>API Key</span>}
+            label={<span style={{ fontSize: 16, fontWeight: 600, color: '#1a202c' }}>API密钥</span>}
             name="apiKey"
             rules={[
-              { required: true, message: 'API key is required!' }
+              { required: true, message: 'API密钥是必需的！' }
             ]}
-            tooltip="Your API key for the selected AI provider"
+            tooltip="所选AI提供商的API密钥"
             style={{ marginBottom: 32 }}
           >
             <Input.Password 
-              placeholder="Enter your API key"
+              placeholder="输入您的API密钥"
               size="large"
               style={{
                 borderRadius: '12px',
@@ -1071,10 +1071,10 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
               onClick={() => console.log('🔴 Submit button clicked')}
             >
               {loading 
-                ? '🚀 Processing...' 
+                ? '🚀 处理中...' 
                 : hasValidOutlineData() 
-                  ? '✨ Create New Project' 
-                  : '🎬 Create Project'
+                  ? '✨ 创建新项目' 
+                  : '🎬 创建项目'
               }
             </Button>
                           <div style={{ marginTop: 20 }}>
@@ -1099,11 +1099,11 @@ const LandingPage: React.FC<ApiConfigFormProps> = ({
       {/* Footer credits */}
       <div className="form-footer">
         <Text type="secondary">
-          Tsinghua University
+          清华大学
         </Text>
         <br />
         <Text type="secondary">
-          github
+          GitHub
         </Text>
       </div>
     </div>

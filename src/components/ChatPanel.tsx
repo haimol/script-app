@@ -72,11 +72,11 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
         background: 'white'
       }}>
         <Text strong style={{ fontSize: 16 }}>
-          💬 Refine Your Outline
+          💬 完善您的大纲
         </Text>
         <br />
         <Text type="secondary" style={{ fontSize: 12 }}>
-          Chat with AI to improve your script outline
+          与AI聊天以改进您的剧本大纲
         </Text>
       </div>
 
@@ -96,8 +96,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
           }}>
             <RobotOutlined style={{ fontSize: 48, marginBottom: 16 }} />
             <Paragraph type="secondary">
-              Start chatting to refine your outline!<br />
-              Try: "Make it more dramatic" or "Add a subplot"
+              开始聊天以完善您的大纲！<br />
+              试试："让它更有戏剧性"或"添加一个副情节"
             </Paragraph>
           </div>
         ) : (
@@ -188,7 +188,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
               bodyStyle={{ padding: '8px 12px' }}
             >
               <Text type="secondary" style={{ fontStyle: 'italic' }}>
-                AI is thinking and updating your outline...
+                AI正在思考并更新您的大纲...
               </Text>
             </Card>
           </div>
@@ -211,7 +211,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Ask for changes to your outline... (Enter to send, Shift+Enter for new line)"
+                          placeholder="请求对您的大纲进行更改... (Enter发送，Shift+Enter换行)"
             autoSize={{ minRows: 1, maxRows: 4 }}
             disabled={disabled || isProcessing}
             style={{ flex: 1 }}
@@ -229,7 +229,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({
         </div>
         
         <Text type="secondary" style={{ fontSize: 11, marginTop: 4, display: 'block' }}>
-          💡 Try: "Make it more dramatic", "Add characters", "Change the setting"
+                        💡 试试："让它更有戏剧性"，"添加角色"，"改变设定"
         </Text>
       </div>
     </div>

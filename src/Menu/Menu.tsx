@@ -53,26 +53,26 @@ const MainFramework: React.FC = () => {
     switch (path) {
       case '/':
         return {
-          title: 'Home',
-          subtitle: 'Create and configure your AI script',
+          title: '首页',
+          subtitle: '创建和配置您的AI剧本',
           icon: <HomeOutlined />
         };
       case '/outline':
         return {
-          title: 'Outline Editor',
-          subtitle: 'Generate and refine your script outline',
+          title: '大纲编辑器',
+          subtitle: '生成和完善您的剧本大纲',
           icon: <EditOutlined />
         };
       case '/episodes':
         return {
-          title: 'Episode Manager',
-          subtitle: 'Break down your outline into episodes',
+          title: '剧集管理器',
+          subtitle: '将您的大纲分解为剧集',
           icon: <FileTextOutlined />
         };
       default:
         return {
-          title: 'Script Writer',
-          subtitle: 'AI-Powered Script Studio',
+          title: '剧本编写器',
+          subtitle: 'AI驱动的剧本工作室',
           icon: <RocketOutlined />
         };
     }

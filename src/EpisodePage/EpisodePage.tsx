@@ -115,10 +115,10 @@ const EpisodePage: React.FC = () => {
         temperature: 0.7,
       });
 
-      return completion.choices[0].message.content || "No response generated.";
+      return completion.choices[0].message.content || "未生成响应。";
     } catch (error) {
       console.error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API Error:`, error);
-      throw new Error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(`${provider.charAt(0).toUpperCase() + provider.slice(1)} API 错误: ${error instanceof Error ? error.message : '未知错误'}`);
     }
   };
 
@@ -132,7 +132,7 @@ const EpisodePage: React.FC = () => {
       const prompt = `你是一位专业剧本创作者，擅长基于结构逻辑、人物动机与主题构建完整且富有戏剧张力的影视剧本。
 请根据以下资料，将剧本大纲分解为 ${episodeCount} 个详细的剧集：
 
-**故事梗概：** ${projectData?.storySynopsis || 'No synopsis provided'}
+**故事梗概：** ${projectData?.storySynopsis || '未提供梗概'}
 
 **结构大纲与剧情大纲：** ${outlineText}
 
@@ -179,7 +179,7 @@ const EpisodePage: React.FC = () => {
 10. 角色动机和行动必须与剧情大纲表格结构（人物、原因、动作、内容、反应）保持一致
 11. 确保冲突和角色发展在剧集间的逻辑推进`;
 
-      console.log(`🤖 Calling ${formData.aiProvider} to generate episodes...`);
+      console.log(`🤖 调用 ${formData.aiProvider} 生成剧集...`);
       console.log(prompt);
       const aiResponse = await callAI(prompt, formData.apiKey, formData.aiProvider);
       
@@ -197,7 +197,7 @@ const EpisodePage: React.FC = () => {
             const jsonStr = aiResponse.substring(jsonStart, jsonEnd + 1);
             parsedResponse = JSON.parse(jsonStr);
           } else {
-            throw new Error('No valid JSON found');
+            throw new Error('未找到有效JSON');
           }
         }
       }
@@ -205,7 +205,7 @@ const EpisodePage: React.FC = () => {
       if (parsedResponse.episodes && Array.isArray(parsedResponse.episodes)) {
         const newEpisodes: EpisodeData[] = parsedResponse.episodes.map((ep: any, index: number) => ({
           id: `episode-${index + 1}`,
-          title: ep.title || `Episode ${index + 1}`,
+          title: ep.title || `剧集 ${index + 1}`,
           outline: ep.outline || '',
           chatHistory: [],
           status: 'outline' as const
@@ -219,18 +219,18 @@ const EpisodePage: React.FC = () => {
         setGlobalChatHistory([{
           id: `system-${Date.now()}`,
           type: 'system',
-          content: `Episodes generated successfully! ${newEpisodes.length} episodes created. You can now edit individual episodes or make global changes.`,
+          content: `剧集生成成功！已创建 ${newEpisodes.length} 个剧集。您现在可以编辑单个剧集或进行全局更改。`,
           timestamp: new Date()
         }]);
 
-        message.success(`${newEpisodes.length} episodes generated successfully!`);
+        message.success(`成功生成 ${newEpisodes.length} 个剧集！`);
       } else {
-        throw new Error('Invalid response format');
+        throw new Error('响应格式无效');
       }
 
     } catch (error) {
       console.error('Episode initialization error:', error);
-      message.error(`Failed to generate episodes: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      message.error(`生成剧集失败: ${error instanceof Error ? error.message : '未知错误'}`);
     } finally {
       setIsInitializing(false);
     }
@@ -256,7 +256,7 @@ const EpisodePage: React.FC = () => {
 
 
 
-**故事梗概：** ${projectData?.storySynopsis || 'No synopsis provided'}
+**故事梗概：** ${projectData?.storySynopsis || '未提供梗概'}
 
 **结构大纲与剧情大纲：** ${outlineText}
 
@@ -306,7 +306,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
       } else {
         // Episode-specific context
         if (!currentEpisode) {
-          message.error('No episode selected');
+          message.error('未选择剧集');
           return;
         }
 
@@ -315,7 +315,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 
         chatPrompt = `你正在协助完善一个特定剧集。以下是相关背景信息：
 
-**故事梗概：** ${projectData?.storySynopsis || '未提供故事梗概'}
+**故事梗概：** ${projectData?.storySynopsis || '未提供梗概'}
 
 **结构大纲与剧情大纲：** ${outlineText}
 
@@ -351,7 +351,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 7. 遵循指定的叙述方式 (${projectData?.narrativeStyle ? narrativeStyleMap[projectData.narrativeStyle] : '直叙'}) 用于所有内容`;
       }
 
-      console.log(`🤖 Processing ${chatContext} chat message...`);
+      console.log(`🤖 处理 ${chatContext} 聊天消息...`);
       const aiResponse = await callAI(chatPrompt, formData.apiKey, formData.aiProvider);
       
       let parsedResponse: any;
@@ -369,14 +369,14 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
               const jsonStr = aiResponse.substring(jsonStart, jsonEnd + 1);
               parsedResponse = JSON.parse(jsonStr);
             } else {
-              throw new Error('No JSON found');
+              throw new Error('未找到JSON');
             }
           }
         } catch {
           parsedResponse = {
             chatReply: aiResponse,
             outlineUpdate: null,
-            updateReason: "AI response was not in expected JSON format"
+            updateReason: "AI响应格式不符合预期JSON格式"
           };
         }
       }
@@ -393,7 +393,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
       const aiChatMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         type: 'assistant',
-        content: parsedResponse.chatReply || "I've processed your request.",
+        content: parsedResponse.chatReply || "我已处理您的请求。",
         timestamp: new Date()
       };
 
@@ -414,7 +414,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
             return ep;
           }));
           setEditorKey(prev => prev + 1);
-          message.success("Episodes updated successfully!");
+          message.success("剧集更新成功！");
         }
 
         // Handle new episodes
@@ -427,13 +427,13 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
             status: 'outline' as const
           }));
           setEpisodes(prev => [...prev, ...newEpisodes]);
-          message.success(`${newEpisodes.length} new episodes added!`);
+          message.success(`已添加 ${newEpisodes.length} 个新剧集！`);
         }
 
         // Handle deleted episodes
         if (parsedResponse.deletedEpisodeIds && parsedResponse.deletedEpisodeIds.length > 0) {
           setEpisodes(prev => prev.filter(ep => !parsedResponse.deletedEpisodeIds.includes(ep.id)));
-          message.success("Episodes removed successfully!");
+          message.success("剧集删除成功！");
         }
 
       } else {
@@ -451,7 +451,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
 
         if (parsedResponse.outlineUpdate) {
           setEditorKey(prev => prev + 1);
-          message.success("Episode outline updated successfully!");
+          message.success("剧集大纲更新成功！");
         }
       }
 
@@ -461,7 +461,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
       const errorMessage: ChatMessage = {
         id: `error-${Date.now()}`,
         type: 'assistant',
-        content: `Sorry, I encountered an error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        content: `抱歉，我遇到了一个错误: ${error instanceof Error ? error.message : '未知错误'}`,
         timestamp: new Date()
       };
       
@@ -479,7 +479,7 @@ ${currentChatHistory.map(msg => `${msg.type}: ${msg.content}`).join('\n')}
         }));
       }
       
-      message.error('Failed to process chat message');
+      message.error('处理聊天消息失败');
     } finally {
       setIsChatProcessing(false);
     }
@@ -525,7 +525,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
 
 请以markdown格式返回完整剧本。`;
 
-      console.log(`🎬 Generating script for ${episode.title}...`);
+      console.log(`🎬 为 ${episode.title} 生成剧本...`);
       const scriptContent = await callAI(prompt, formData.apiKey, formData.aiProvider);
 
       // Update episode with generated script
@@ -539,11 +539,11 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
 
       setScriptPanelVisible(true);
       setSelectedScriptId(episodeId);
-      message.success(`Script generated for ${episode.title}!`);
+      message.success(`已为 ${episode.title} 生成剧本！`);
 
     } catch (error) {
       console.error('Script generation error:', error);
-      message.error(`Failed to generate script: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      message.error(`生成剧本失败: ${error instanceof Error ? error.message : '未知错误'}`);
       
       // Reset episode status
       setEpisodes(prev => prev.map(ep => 
@@ -564,13 +564,13 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
     return (
       <div style={{ padding: 24 }}>
         <Alert
-          message="Missing Outline Data"
-          description="Please complete the outline creation process first before managing episodes."
+          message="缺少大纲数据"
+          description="请先完成大纲创建过程，然后再管理剧集。"
           type="warning"
           showIcon
           action={
             <Button size="small" type="primary" onClick={() => window.location.href = '/outline'}>
-              Go to Outline Page
+              前往大纲页面
             </Button>
           }
         />
@@ -601,11 +601,11 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
       }}>
         <Alert
-          message={isInitializing ? "🎬 Creating Episodes..." : "📺 Episode Manager"}
+          message={isInitializing ? "🎬 正在创建剧集..." : "📺 剧集管理器"}
           description={
             isInitializing 
-              ? `Breaking down your outline into manageable episodes...`
-              : `${episodes.length} episodes ready • Use global chat for series changes, episode chat for specific edits`
+              ? `正在将您的大纲分解为可管理的剧集...`
+              : `${episodes.length} 个剧集已就绪 • 使用全局聊天进行系列更改，使用剧集聊天进行特定编辑`
           }
           type={isInitializing ? "info" : "success"}
           showIcon
@@ -679,10 +679,10 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <div>
                     <Title level={5} style={{ color: 'white', margin: 0, marginBottom: 4 }}>
-                      {chatContext === 'global' ? '🌍 Global Series Chat' : `📝 ${currentEpisode?.title || 'Episode Chat'}`}
+                      {chatContext === 'global' ? '🌍 全局系列聊天' : `📝 ${currentEpisode?.title || '剧集聊天'}`}
                     </Title>
                     <Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: 12 }}>
-                      {chatContext === 'global' ? 'Manage all episodes' : 'Edit current episode'}
+                      {chatContext === 'global' ? '管理所有剧集' : '编辑当前剧集'}
                     </Text>
                   </div>
                   <Select
@@ -691,8 +691,8 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                     style={{ width: 140 }}
                     size="small"
                   >
-                    <Option value="global">🌍 Global</Option>
-                    <Option value="episode">📝 Episode</Option>
+                    <Option value="global">🌍 全局</Option>
+                    <Option value="episode">📝 剧集</Option>
                   </Select>
                 </div>
               </div>
@@ -727,7 +727,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                     type="text" 
                     style={{ padding: '0 4px', height: 20, fontSize: 10 }}
                     onClick={() => setChatHeight(30)}
-                    title="Minimize chat"
+                    title="最小化聊天"
                   >
                     ↓
                   </Button>
@@ -736,7 +736,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                     type="text" 
                     style={{ padding: '0 4px', height: 20, fontSize: 10 }}
                     onClick={() => setChatHeight(50)}
-                    title="Balance view"
+                    title="平衡视图"
                   >
                     ▣
                   </Button>
@@ -745,7 +745,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                     type="text" 
                     style={{ padding: '0 4px', height: 20, fontSize: 10 }}
                     onClick={() => setChatHeight(70)}
-                    title="Maximize chat"
+                    title="最大化聊天"
                   >
                     ↑
                   </Button>
@@ -766,10 +766,10 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                   color: 'white'
                 }}>
                   <Title level={5} style={{ color: 'white', margin: 0, marginBottom: 4 }}>
-                    Episodes
+                    剧集
                   </Title>
                   <Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: 12 }}>
-                    {episodes.length} total • {episodes.filter(ep => ep.script).length} scripts ready
+                    共 {episodes.length} 个 • {episodes.filter(ep => ep.script).length} 个剧本已就绪
                   </Text>
                 </div>
                 
@@ -822,8 +822,8 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                             status={episode.status === 'script-ready' ? 'success' : episode.status === 'generating-script' ? 'processing' : 'default'}
                             text={
                               <Text style={{ fontSize: 9, color: '#666' }}>
-                                {episode.status === 'script-ready' ? 'Ready' : 
-                                 episode.status === 'generating-script' ? 'Loading...' : 'Outline'}
+                                {episode.status === 'script-ready' ? '就绪' : 
+                                 episode.status === 'generating-script' ? '生成中...' : '大纲'}
                               </Text>
                             }
                           />
@@ -846,7 +846,7 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                             generateScript(episode.id);
                           }}
                         >
-                          {episode.script ? 'Regen' : 'Script'}
+                          {episode.script ? '重新生成' : '生成剧本'}
                         </Button>
                       </Card>
                     ))}
@@ -878,10 +878,10 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                 color: 'white'
               }}>
                 <Title level={5} style={{ color: 'white', margin: 0, marginBottom: 4 }}>
-                  {currentEpisode ? `📝 ${currentEpisode.title}` : '📺 Episode Editor'}
+                  {currentEpisode ? `📝 ${currentEpisode.title}` : '📺 剧集编辑器'}
                 </Title>
                 <Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: 12 }}>
-                  {currentEpisode ? 'Edit episode outline and content' : 'Select an episode to start editing'}
+                  {currentEpisode ? '编辑剧集大纲和内容' : '选择一个剧集开始编辑'}
                 </Text>
               </div>
 
@@ -992,8 +992,8 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                       WebkitTextFillColor: 'transparent',
                       backgroundClip: 'text'
                     }}>📺</div>
-                    <div style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>Select an Episode</div>
-                    <div style={{ fontSize: 14, color: '#9ca3af' }}>Choose an episode from the left panel to start editing</div>
+                    <div style={{ fontSize: 18, fontWeight: 500, marginBottom: 8 }}>选择一个剧集</div>
+                    <div style={{ fontSize: 14, color: '#9ca3af' }}>从左侧面板选择一个剧集开始编辑</div>
                   </div>
                 )}
               </div>
@@ -1025,10 +1025,10 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                 }}>
                   <div>
                     <Title level={4} style={{ color: 'white', margin: 0, marginBottom: 4 }}>
-                      Scripts
+                      剧本
                     </Title>
                     <Text style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: 12 }}>
-                      Generated scripts
+                      已生成的剧本
                     </Text>
                   </div>
                   <Button 
@@ -1083,10 +1083,10 @@ ${episodes.map((ep, i) => `第${i + 1}集：${ep.title}`).join('\n')}
                                 size="small"
                                 onClick={() => {
                                   navigator.clipboard.writeText(ep.script || '');
-                                  message.success('Script copied to clipboard!');
+                                  message.success('剧本已复制到剪贴板！');
                                 }}
                               >
-                                📋 Copy
+                                📋 复制
                               </Button>
                             </div>
                           </div>
