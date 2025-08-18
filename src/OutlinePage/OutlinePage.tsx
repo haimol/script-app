@@ -234,7 +234,7 @@ ${projectData.storySynopsis}
       setChatHistory([{
         id: `system-${Date.now()}`,
         type: 'system',
-        content: `Initial outline generated successfully! You can now chat to refine it.`,
+        content: `初始大纲生成成功！您可以开始聊天以完善它。`,
         timestamp: new Date()
       }]);
       
